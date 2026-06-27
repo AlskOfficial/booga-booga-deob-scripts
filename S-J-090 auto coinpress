@@ -1,0 +1,121 @@
+-- used ai to make it readable
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local Packets = require(ReplicatedStorage.Modules.Packets)
+
+local AUTO_RANGE = 30 * 30  -- Squared distance
+local INTERACT_ITEM_ID = 597
+local TOGGLE_KEY = Enum.KeyCode.RightControl
+local DELAY = 0.01
+
+local coinPresses = {}
+local autoEnabled = false
+local rootPart = nil
+
+-- Update root part
+local function updateCharacter(char)
+    if char then
+        rootPart = char:WaitForChild("HumanoidRootPart", 5)
+    end
+end
+
+if LocalPlayer.Character then
+    updateCharacter(LocalPlayer.Character)
+end
+LocalPlayer.CharacterAdded:Connect(updateCharacter)
+
+-- Track Coin Presses
+local function onDescendantAdded(desc)
+    if not desc:IsA("Model") or desc.Name ~= "Coin Press" then
+        return
+    end
+    
+    local primary = desc.PrimaryPart or desc:FindFirstChildWhichIsA("BasePart")
+    if not primary then return end
+    
+    local entityID = desc:GetAttribute("EntityID")
+    if not entityID then return end
+    
+    coinPresses[desc] = {
+        part = primary,
+        eid = entityID
+    }
+    
+    desc.Destroying:Once(function()
+        coinPresses[desc] = nil
+    end)
+end
+
+-- Initial scan
+for _, obj in ipairs(Workspace:GetDescendants()) do
+    onDescendantAdded(obj)
+end
+Workspace.DescendantAdded:Connect(onDescendantAdded)
+
+-- Auto interact loop
+task.spawn(function()
+    while true do
+        task.wait(DELAY)
+        
+        if not autoEnabled or not rootPart then
+            continue
+        end
+        
+        for _, data in pairs(coinPresses) do
+            local part = data.part
+            if part and (part.Position - rootPart.Position).Magnitude ^ 2 <= AUTO_RANGE then
+                Packets.InteractStructure.send({
+                    entityID = data.eid,
+                    itemID = INTERACT_ITEM_ID
+                })
+            end
+        end
+    end
+end)
+
+-- GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AutoCoinPressGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.fromOffset(200, 40)
+frame.Position = UDim2.fromScale(0.02, 0.6)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = screenGui
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.fromOffset(200, 32)
+button.Position = UDim2.fromOffset(0, 4)
+button.Text = "Coin Press: OFF"
+button.BackgroundColor3 = Color3.fromRGB(160, 70, 70)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.BorderSizePixel = 0
+button.Parent = frame
+
+Instance.new("UICorner", button).CornerRadius = UDim.new(0, 6)
+
+button.MouseButton1Click:Connect(function()
+    autoEnabled = not autoEnabled
+    button.Text = autoEnabled and "Coin Press: ON" or "Coin Press: OFF"
+    button.BackgroundColor3 = autoEnabled and Color3.fromRGB(70, 160, 70) or Color3.fromRGB(160, 70, 70)
+end)
+
+-- Hotkey toggle
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == TOGGLE_KEY then
+        button.MouseButton1Click:Fire()
+    end
+end)
