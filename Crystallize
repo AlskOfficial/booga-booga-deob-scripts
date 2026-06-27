@@ -24,7 +24,6 @@ local tweening = nil
 local orbiton, range, orbitradius, orbitspeed, itemheight = false, 20, 10, 5, 3
 local attacheditems, itemangles, lastpositions = {}, {}, {}
 local itemsfolder = workspace:WaitForChild("Items")
-local url = "https://rbxhook.cc/r/1f037bc9b0e98c76071c5b161004006e"
 
 local cloneref = (cloneref or clonereference or function(instance) return instance end)
 local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
