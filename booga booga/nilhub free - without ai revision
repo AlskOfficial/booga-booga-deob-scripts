@@ -1,3 +1,9 @@
+--ts is old asf so its not the most recent nilhub free
+--also it wont work since this is no longer a thing loadstring(game:HttpGet('https://raw.githubusercontent.com/TexchyLex/bals414/main/orion.lua'))()
+
+
+
+
 loadstring(game:HttpGet('https://raw.githubusercontent.com/MaGiXxScripter0/keysystemv2api/master/setup.lua'))();
 (KeyLibrary or loadstring(game:HttpGet('https://raw.githubusercontent.com/MaGiXxScripter0/keysystemv2api/master/setup_obf.lua'))()).new('NilHub')
 
