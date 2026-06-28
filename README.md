@@ -1,4 +1,4 @@
-if you want me to deobfuscate a booga script @alskofficial on discord
+if you want me to deobfuscate a script @alskofficial on discord
 
 
 only can deobfuscate
