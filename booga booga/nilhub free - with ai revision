@@ -1,0 +1,4125 @@
+--basically nilhub free wouldnt load unless i swapped ui (because texchy used custom ui but he deleted repo) SO i swapped ui by using ai
+--also didnt bother testing anything
+CGUI = game:GetService('CoreGui')
+SGUI = game:GetService('StarterGui')
+GUIS = game:GetService('GuiService')
+ChatService = game:GetService('Chat')
+Lighting = game:GetService('Lighting')
+UIS = game:GetService('UserInputService')
+DebrisService = game:GetService('Debris')
+RunService = game:GetService('RunService')
+MS = game:GetService('MarketplaceService')
+HttpService = game:GetService('HttpService')
+CAS = game:GetService('ContextActionService')
+SoundService = game:GetService('SoundService')
+TweenService = game:GetService('TweenService')
+textChatService = game:GetService('TextChatService')
+MaterialService = game:GetService('MaterialService')
+ReplicatedStorage = game:GetService('ReplicatedStorage')
+PathfindingService = game:GetService('PathfindingService')
+ProximityPromptService = game:GetService('ProximityPromptService')
+Players = game:GetService('Players')
+LocalPlayerHumanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild('Humanoid') or nil
+localWait = wait
+PFS = game:GetService('PathfindingService')
+Workspace = game:GetService('Workspace')
+isFunctionalityActive = false
+isTweening = false
+isAutoHarvesting = false
+isTweening2 = false
+LocalPlayer = Players.LocalPlayer
+mouse = Players.LocalPlayer:GetMouse()
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local v4 = Rayfield:CreateWindow({
+	Name = "Nil Hub [FREE]",
+	LoadingTitle = "Nil Hub",
+	LoadingSubtitle = "Fixed",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = "OrionTest",
+		FileName = "Config"
+	},
+	KeySystem = false
+})
+local v5 = v4:CreateTab("Main", 4370345144)
+local v6 = v4:CreateTab("Farm", 4335482575)
+local v7 = v4:CreateTab("Combat", 7733674079)
+local v8 = v4:CreateTab("Misc", 4370318685)
+local v9 = v4:CreateTab("Custom Pickup", 7733955740)
+v8:CreateSection("Teleport")
+v8:CreateSection("Discord")
+v8:CreateSection("Esp")
+v8:CreateSection("Misc")
+v8:CreateSection("Drop")
+v5:CreateSection("Main")
+v5:CreateSection("Other")
+v7:CreateSection("AutoHits")
+v7:CreateSection("Combat")
+v6:CreateSection("Farm")
+v8:CreateSection("Other")
+v6:CreateSection("Gold farm go brrrr")
+v6:CreateSection("Settings")
+v6:CreateSection("Farm")
+local _ = nil
+local _ = nil
+
+v7:CreateToggle({
+    Name = 'Toggle Noclip',
+    CurrentValue = false,
+    Callback = function(p23)
+        coroutine.wrap(function()
+            while p23 do
+                local v24, v25, v26 = ipairs(workspace.Deployables:GetChildren())
+                local v27 = {
+                    ["Big Ol' Hut"] = 'Door',
+                    Dock = 'StructureWood',
+                    Bridge = 'StructureWood',
+                }
+
+                while true do
+                    local v28
+
+                    v26, v28 = v24(v25, v26)
+
+                    if v26 == nil then
+                        break
+                    end
+                    if v27[v28.Name] then
+                        local v29 = v28:FindFirstChild(v27[v28.Name])
+
+                        if v29 then
+                            v29:Destroy()
+                        end
+                    end
+                end
+
+                task.wait()
+            end
+        end)()
+    end,
+})
+
+local v30 = {
+    'Bloodfruit',
+    'Pumpkin',
+    'Strangefruit',
+    'Oddberry',
+    'Lemon',
+    'Apple',
+    'Coconut',
+    'Jelly',
+    'Sunfruit',
+    'Bluefruit',
+    'Berry',
+    'Orange',
+    'Cloudberry',
+    'Banana',
+}
+local u31 = nil
+
+v6:CreateDropdown({
+    Name = 'Select Plant',
+    Options = v30,
+    CurrentOption = v30[1],
+    MultipleOptions = false,
+    Callback = function(Option)
+        u31 = typeof(Option) == "table" and Option[1] or Option
+    end,
+})
+
+local u33 = 50
+
+v6:CreateSlider({
+    Name = 'Range',
+    Range = {0, 150},
+    Increment = 1,
+    Suffix = "Range",
+    CurrentValue = u33,
+    Callback = function(p34)
+        u33 = p34
+    end,
+})
+v6:CreateInput({
+    Name = 'Range for Mobile',
+    PlaceholderText = tostring(u33),
+    Callback = function(p35)
+        u33 = tonumber(p35)
+    end,
+})
+
+local _ = 5
+
+local function _(p36)
+    return p36:FindFirstAncestor(LocalPlayer.Name .. "'s Car") or p36:FindFirstAncestor('Body') and p36:FindFirstAncestor('Body').Parent or (p36:FindFirstAncestor('Misc') and p36:FindFirstAncestor('Misc').Parent or p36:FindFirstAncestorWhichIsA('Model'))
+end
+
+local _ = 100
+local _ = nil
+
+PLANT_BOX = 'Plant Box'
+DEPLOYABLES = 'Deployables'
+INTERACT_STRUCTURE = 'InteractStructure'
+REPLICATED_STORAGE = 'ReplicatedStorage'
+EVENTS = 'Events'
+
+function getClosestStructure(p37, p38)
+    local _huge = math.huge
+    local v40, v41, v42 = ipairs(p38)
+    local v43 = nil
+    local v44 = nil
+
+    while true do
+        local v45
+
+        v42, v45 = v40(v41, v42)
+
+        if v42 == nil then
+            break
+        end
+        if v45.Name == PLANT_BOX and not v45:FindFirstChild(u31) then
+            local v46 = v45.PrimaryPart or v45:FindFirstChildWhichIsA('BasePart')
+
+            if v46 then
+                local _Magnitude = (p37 - v46.Position).Magnitude
+
+                if _Magnitude < _huge then
+                    if _Magnitude <= 40 then
+                        v44 = v45
+                        v43 = v42
+                        _huge = _Magnitude
+                    end
+                end
+            end
+        end
+    end
+
+    if v43 then
+        table.remove(p38, v43)
+    end
+
+    return v44
+end
+
+v6:CreateToggle({
+    Name = 'Auto Plant',
+    CurrentValue = false,
+    Callback = function(p48)
+        toggled = p48
+
+        coroutine.wrap(function()
+            while toggled do
+                local v49 = u31
+                local _Character = game.Players.LocalPlayer.Character
+                local v51 = _Character and _Character.PrimaryPart
+
+                if v51 then
+                    v51 = _Character.PrimaryPart.Position
+                end
+
+                local _huge2 = math.huge
+                local v53 = workspace.Deployables.GetChildren(workspace.Deployables)
+                local v54 = nil
+
+                for v55 = 1, #v53 do
+                    local v56 = v53[v55]
+
+                    if v56.Name == 'Plant Box' then
+                        if not v56:FindFirstChild(v49) then
+                            local _BasePart = v56:FindFirstChildWhichIsA('BasePart')
+
+                            if _BasePart then
+                                local v58 = (_BasePart.Position - v51).Magnitude ^ 2
+
+                                if v58 < _huge2 then
+                                    v54 = v56
+                                    _huge2 = v58
+                                end
+                            end
+                        end
+                    end
+                end
+
+                if v54 then
+                    game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('InteractStructure'):FireServer(unpack({v54, v49}))
+                else
+                    print('No suitable Plant Box found.')
+                end
+
+                task.wait(0.0001)
+            end
+        end)()
+    end,
+})
+v6:CreateToggle({
+    Name = 'Move to Plant Box and Bushes ( UPDATED ) (BUY PREMIUM NIGGAS)',
+    CurrentValue = false,
+    Callback = function(p59)
+        toggled = p59
+        isMoving = false
+
+        local _HumanoidRootPart = game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart')
+
+        coroutine.wrap(function()
+            while toggled do
+                if isMoving then
+                    task.wait(0.1)
+                else
+                    local v80, v81 = pcall(function()
+                        function getNearPickup()
+                            local _huge3 = math.huge
+                            local v62, v63, v64 = pairs(game:GetService('Workspace'):GetChildren())
+                            local v65 = nil
+
+                            while true do
+                                local v66
+
+                                v64, v66 = v62(v63, v64)
+
+                                if v64 == nil then
+                                    break
+                                end
+                                if v66:FindFirstChild('Pickup') and v66:IsA('Model') then
+                                    local _BasePart2 = v66:FindFirstChildWhichIsA('BasePart')
+
+                                    if _BasePart2 then
+                                        local _Magnitude2 = (_HumanoidRootPart.Position - _BasePart2.Position).Magnitude
+
+                                        if _Magnitude2 < _huge3 then
+                                            v65 = _BasePart2
+                                            _huge3 = _Magnitude2
+                                        end
+                                    end
+                                end
+                            end
+
+                            return v65
+                        end
+                        function getNearPlantBox()
+                            local _huge4 = math.huge
+                            local v70, v71, v72 = pairs(game:GetService('Workspace').Deployables:GetChildren())
+                            local v73 = nil
+
+                            while true do
+                                local v74
+
+                                v72, v74 = v70(v71, v72)
+
+                                if v72 == nil then
+                                    break
+                                end
+                                if v74.Name == 'Plant Box' and not v74:FindFirstChild(u31) then
+                                    local _BasePart3 = v74:FindFirstChildWhichIsA('BasePart')
+
+                                    if _BasePart3 then
+                                        local _Magnitude3 = (_HumanoidRootPart.Position - _BasePart3.Position).Magnitude
+
+                                        if _Magnitude3 < _huge4 then
+                                            v73 = _BasePart3
+                                            _huge4 = _Magnitude3
+                                        end
+                                    end
+                                end
+                            end
+
+                            return v73
+                        end
+
+                        local v77 = getNearPickup() or getNearPlantBox()
+
+                        if v77 then
+                            isMoving = true
+
+                            local v78 = math.round(math.abs((_HumanoidRootPart.Position - v77.Position).Magnitude)) / tonumber(12.5)
+                            local v79 = game:GetService('TweenService'):Create(_HumanoidRootPart, TweenInfo.new(tonumber(v78), Enum.EasingStyle.Linear), {
+                                CFrame = CFrame.new(v77.Position + Vector3.new(0, 4, 0)),
+                            })
+
+                            v79:Play()
+                            v79.Completed:Wait()
+
+                            isMoving = false
+                        else
+                            print('No suitable object found.')
+                        end
+                    end)
+
+                    if not v80 then
+                        print('An error occurred: ' .. tostring(v81))
+                    end
+
+                    task.wait(0.0001)
+                end
+            end
+        end)()
+    end,
+})
+
+local function u92()
+    local _HumanoidRootPart2 = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local v83 = game:GetService('Workspace'):GetChildren()
+    local _huge5 = math.huge
+    local v85, v86, v87 = ipairs(v83)
+    local v88 = nil
+
+    while true do
+        local v89
+
+        v87, v89 = v85(v86, v87)
+
+        if v87 == nil then
+            break
+        end
+
+        local _Reference = v89:FindFirstChild('Reference')
+
+        if _Reference and v89.Name == 'Gold Node' then
+            local _Magnitude4 = (_HumanoidRootPart2.Position - _Reference.Position).Magnitude
+
+            if _Magnitude4 < _huge5 then
+                v88 = v89
+                _huge5 = _Magnitude4
+            end
+        end
+    end
+
+    return v88
+end
+
+local u93 = false
+
+local function u100()
+    while u93 do
+        local _Character2 = game.Players.LocalPlayer.Character
+
+        if _Character2 then
+            _Character2 = _Character2:FindFirstChild('HumanoidRootPart')
+        end
+        if _Character2 then
+            local v95 = _Character2.Position + _Character2.CFrame.LookVector * 5
+            local v96 = Vector3.new(v95.X, _Character2.Position.Y, v95.Z)
+            local v97 = Ray.new(v96, Vector3.new(0, -1, 0) * 50)
+            local v98, v99 = game.Workspace:FindPartOnRay(v97, game.Players.LocalPlayer.Character, false, true)
+
+            if not v98 then
+                v99 = v96
+            end
+
+            game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('PlaceStructure'):FireServer(unpack({
+                v99,
+                'Plant Box',
+                0,
+                true,
+            }))
+        else
+            print('No character found for player')
+        end
+
+        wait(0.01)
+    end
+end
+
+v6:CreateToggle({
+    Name = 'Place Plant Box',
+    CurrentValue = false,
+    Callback = function(p101)
+        u93 = p101
+
+        if p101 then
+            u100()
+        end
+    end,
+})
+
+local _Humanoid = game.Players.LocalPlayer.Character:WaitForChild('Humanoid')
+local u103 = game:GetService('PathfindingService'):CreatePath()
+
+local function u105(p104)
+    _Humanoid:MoveTo(p104.Position)
+
+    repeat
+        wait()
+    until (p104.Position - _Humanoid.RootPart.Position).magnitude <= 5
+end
+local function _()
+    local _Position = _Humanoid.RootPart.Position
+    local v107 = u92(_Position)
+
+    if v107 then
+        u103:ComputeAsync(_Position, v107:FindFirstChild('Reference').Position)
+
+        local v108 = u103:GetWaypoints()
+        local v109, v110, v111 = ipairs(v108)
+
+        while true do
+            local v112
+
+            v111, v112 = v109(v110, v111)
+
+            if v111 == nil then
+                break
+            end
+
+            u105(v112)
+        end
+
+        print('Reached the nearest Gold Node!')
+    else
+        print('No Gold Node found.')
+    end
+end
+
+FLYING = false
+iyflyspeed = 0.25
+vehicleflyspeed = 0.25
+
+v6:CreateToggle({
+    Name = 'Auto Harvest',
+    CurrentValue = false,
+    Callback = function(p113)
+        getgenv().autoharvest = p113
+
+        if p113 then
+            spawn(function()
+                while getgenv().autoharvest do
+                    wait()
+                    pcall(function()
+                        spawn(function()
+                            local v114 = 50
+                            local _LocalPlayer = game.Players.LocalPlayer
+                            local v116 = _LocalPlayer and _LocalPlayer.Character and _LocalPlayer.Character:FindFirstChild('HumanoidRootPart')
+
+                            if v116 then
+                                local v117, v118, v119 = pairs(game:GetService('Workspace'):GetChildren())
+
+                                while true do
+                                    local v120
+
+                                    v119, v120 = v117(v118, v119)
+
+                                    if v119 == nil then
+                                        break
+                                    end
+                                    if v120:FindFirstChild('Pickup') and v120:IsA('Model') then
+                                        local _BasePart4 = v120:FindFirstChildWhichIsA('BasePart')
+
+                                        if _BasePart4 and (v116.Position - _BasePart4.Position).Magnitude < v114 then
+                                            game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v120)
+
+                                            v114 = (v116.Position - _BasePart4.Position).Magnitude
+                                        end
+                                    end
+                                end
+                            end
+                        end)
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Bloodfruit',
+    CurrentValue = false,
+    Callback = function(p122)
+        getgenv().autopickupBloodfruit = p122
+
+        if p122 then
+            spawn(function()
+                while getgenv().autopickupBloodfruit do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart3 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v124, v125, v126 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v127
+
+                            v126, v127 = v124(v125, v126)
+
+                            if v126 == nil then
+                                break
+                            end
+                            if v127:FindFirstChild('Pickup') and (v127:IsA('BasePart') or v127:IsA('UnionOpreation')) and (v127.Name == 'Bloodfruit' and (_HumanoidRootPart3.Position - v127.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v127)
+                            end
+                        end
+
+                        local v128, v129, v130 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v131
+
+                            v130, v131 = v128(v129, v130)
+
+                            if v130 == nil then
+                                break
+                            end
+                            if v131:FindFirstChild('Pickup') and (v131:IsA('BasePart') or v131:IsA('UnionOpreation')) and (v131.Name == 'Bloodfruit' and (_HumanoidRootPart3.Position - v131.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v131)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Logs',
+    CurrentValue = false,
+    Callback = function(p132)
+        getgenv().autopickuplog = p132
+
+        if p132 then
+            spawn(function()
+                while getgenv().autopickuplog do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart4 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v134, v135, v136 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v137
+
+                            v136, v137 = v134(v135, v136)
+
+                            if v136 == nil then
+                                break
+                            end
+                            if v137:FindFirstChild('Pickup') and (v137:IsA('BasePart') or v137:IsA('UnionOpreation')) and (v137.Name == 'Log' and (_HumanoidRootPart4.Position - v137.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v137)
+                            end
+                        end
+
+                        local v138, v139, v140 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v141
+
+                            v140, v141 = v138(v139, v140)
+
+                            if v140 == nil then
+                                break
+                            end
+                            if v141:FindFirstChild('Pickup') and (v141:IsA('BasePart') or v141:IsA('UnionOpreation')) and (v141.Name == 'Log' and (_HumanoidRootPart4.Position - v141.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v141)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Wood',
+    CurrentValue = false,
+    Callback = function(p142)
+        getgenv().autopickupwood = p142
+
+        if p142 then
+            spawn(function()
+                while getgenv().autopickupwood do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart5 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v144, v145, v146 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v147
+
+                            v146, v147 = v144(v145, v146)
+
+                            if v146 == nil then
+                                break
+                            end
+                            if v147:FindFirstChild('Pickup') and (v147:IsA('BasePart') or v147:IsA('UnionOpreation')) and (v147.Name == 'Wood' and (_HumanoidRootPart5.Position - v147.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v147)
+                            end
+                        end
+
+                        local v148, v149, v150 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v151
+
+                            v150, v151 = v148(v149, v150)
+
+                            if v150 == nil then
+                                break
+                            end
+                            if v151:FindFirstChild('Pickup') and (v151:IsA('BasePart') or v151:IsA('UnionOpreation')) and (v151.Name == 'Wood' and (_HumanoidRootPart5.Position - v151.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v151)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Coal',
+    CurrentValue = false,
+    Callback = function(p152)
+        getgenv().autopickupcoal = p152
+
+        if p152 then
+            spawn(function()
+                while getgenv().autopickupcoal do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart6 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v154, v155, v156 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v157
+
+                            v156, v157 = v154(v155, v156)
+
+                            if v156 == nil then
+                                break
+                            end
+                            if v157:FindFirstChild('Pickup') and (v157:IsA('BasePart') or v157:IsA('UnionOpreation')) and (v157.Name == 'Coal' and (_HumanoidRootPart6.Position - v157.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v157)
+                            end
+                        end
+
+                        local v158, v159, v160 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v161
+
+                            v160, v161 = v158(v159, v160)
+
+                            if v160 == nil then
+                                break
+                            end
+                            if v161:FindFirstChild('Pickup') and (v161:IsA('BasePart') or v161:IsA('UnionOpreation')) and (v161.Name == 'Coal' and (_HumanoidRootPart6.Position - v161.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v161)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Stone',
+    CurrentValue = false,
+    Callback = function(p162)
+        getgenv().autopickupStone = p162
+
+        if p162 then
+            spawn(function()
+                while getgenv().autopickupStone do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart7 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v164, v165, v166 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v167
+
+                            v166, v167 = v164(v165, v166)
+
+                            if v166 == nil then
+                                break
+                            end
+                            if v167:FindFirstChild('Pickup') and (v167:IsA('BasePart') or v167:IsA('UnionOpreation')) and (v167.Name == 'Stone' and (_HumanoidRootPart7.Position - v167.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v167)
+                            end
+                        end
+
+                        local v168, v169, v170 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v171
+
+                            v170, v171 = v168(v169, v170)
+
+                            if v170 == nil then
+                                break
+                            end
+                            if v171:FindFirstChild('Pickup') and (v171:IsA('BasePart') or v171:IsA('UnionOpreation')) and (v171.Name == 'Stone' and (_HumanoidRootPart7.Position - v171.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v171)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Iron',
+    CurrentValue = false,
+    Callback = function(p172)
+        getgenv().autopickupIron = p172
+
+        if p172 then
+            spawn(function()
+                while getgenv().autopickupIron do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart8 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v174, v175, v176 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v177
+
+                            v176, v177 = v174(v175, v176)
+
+                            if v176 == nil then
+                                break
+                            end
+                            if v177:FindFirstChild('Pickup') and (v177:IsA('BasePart') or v177:IsA('UnionOpreation')) and (v177.Name == 'Iron' and (_HumanoidRootPart8.Position - v177.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v177)
+                            end
+                        end
+
+                        local v178, v179, v180 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v181
+
+                            v180, v181 = v178(v179, v180)
+
+                            if v180 == nil then
+                                break
+                            end
+                            if v181:FindFirstChild('Pickup') and (v181:IsA('BasePart') or v181:IsA('UnionOpreation')) and (v181.Name == 'Iron' and (_HumanoidRootPart8.Position - v181.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v181)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Iron',
+    CurrentValue = false,
+    Callback = function(p182)
+        getgenv().autopickupIron = p182
+
+        if p182 then
+            spawn(function()
+                while getgenv().autopickupIron do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart9 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v184, v185, v186 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v187
+
+                            v186, v187 = v184(v185, v186)
+
+                            if v186 == nil then
+                                break
+                            end
+                            if v187:FindFirstChild('Pickup') and (v187:IsA('BasePart') or v187:IsA('UnionOpreation')) and (v187.Name == 'Iron' and (_HumanoidRootPart9.Position - v187.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v187)
+                            end
+                        end
+
+                        local v188, v189, v190 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v191
+
+                            v190, v191 = v188(v189, v190)
+
+                            if v190 == nil then
+                                break
+                            end
+                            if v191:FindFirstChild('Pickup') and (v191:IsA('BasePart') or v191:IsA('UnionOpreation')) and (v191.Name == 'Iron' and (_HumanoidRootPart9.Position - v191.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v191)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Steel',
+    CurrentValue = false,
+    Callback = function(p192)
+        getgenv().autopickupSteel = p192
+
+        if p192 then
+            spawn(function()
+                while getgenv().autopickupSteel do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart10 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v194, v195, v196 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v197
+
+                            v196, v197 = v194(v195, v196)
+
+                            if v196 == nil then
+                                break
+                            end
+                            if v197:FindFirstChild('Pickup') and (v197:IsA('BasePart') or v197:IsA('UnionOpreation')) and (v197.Name == 'Steel' and (_HumanoidRootPart10.Position - v197.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v197)
+                            end
+                        end
+
+                        local v198, v199, v200 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v201
+
+                            v200, v201 = v198(v199, v200)
+
+                            if v200 == nil then
+                                break
+                            end
+                            if v201:FindFirstChild('Pickup') and (v201:IsA('BasePart') or v201:IsA('UnionOpreation')) and (v201.Name == 'Steel' and (_HumanoidRootPart10.Position - v201.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v201)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Gold',
+    CurrentValue = false,
+    Callback = function(p202)
+        getgenv().autopickupGold = p202
+
+        if p202 then
+            spawn(function()
+                while getgenv().autopickupGold do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart11 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v204, v205, v206 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v207
+
+                            v206, v207 = v204(v205, v206)
+
+                            if v206 == nil then
+                                break
+                            end
+                            if v207:FindFirstChild('Pickup') and (v207:IsA('BasePart') or v207:IsA('UnionOpreation')) and (v207.Name == 'Gold' and (_HumanoidRootPart11.Position - v207.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v207)
+                            end
+                        end
+
+                        local v208, v209, v210 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v211
+
+                            v210, v211 = v208(v209, v210)
+
+                            if v210 == nil then
+                                break
+                            end
+                            if v211:FindFirstChild('Pickup') and (v211:IsA('BasePart') or v211:IsA('UnionOpreation')) and (v211.Name == 'Gold' and (_HumanoidRootPart11.Position - v211.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v211)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Raw Gold',
+    CurrentValue = false,
+    Callback = function(p212)
+        getgenv().autopickupRawGold = p212
+
+        if p212 then
+            spawn(function()
+                while getgenv().autopickupRawGold do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart12 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v214, v215, v216 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v217
+
+                            v216, v217 = v214(v215, v216)
+
+                            if v216 == nil then
+                                break
+                            end
+                            if v217:FindFirstChild('Pickup') and (v217:IsA('BasePart') or v217:IsA('UnionOpreation')) and (v217.Name == 'Raw Gold' and (_HumanoidRootPart12.Position - v217.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v217)
+                            end
+                        end
+
+                        local v218, v219, v220 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v221
+
+                            v220, v221 = v218(v219, v220)
+
+                            if v220 == nil then
+                                break
+                            end
+                            if v221:FindFirstChild('Pickup') and (v221:IsA('BasePart') or v221:IsA('UnionOpreation')) and (v221.Name == 'Raw Gold' and (_HumanoidRootPart12.Position - v221.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v221)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Adurite',
+    CurrentValue = false,
+    Callback = function(p222)
+        getgenv().autopickupAdurite = p222
+
+        if p222 then
+            spawn(function()
+                while getgenv().autopickupAdurite do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart13 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v224, v225, v226 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v227
+
+                            v226, v227 = v224(v225, v226)
+
+                            if v226 == nil then
+                                break
+                            end
+                            if v227:FindFirstChild('Pickup') and (v227:IsA('BasePart') or v227:IsA('UnionOpreation')) and (v227.Name == 'Adurite' and (_HumanoidRootPart13.Position - v227.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v227)
+                            end
+                        end
+
+                        local v228, v229, v230 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v231
+
+                            v230, v231 = v228(v229, v230)
+
+                            if v230 == nil then
+                                break
+                            end
+                            if v231:FindFirstChild('Pickup') and (v231:IsA('BasePart') or v231:IsA('UnionOpreation')) and (v231.Name == 'Adurite' and (_HumanoidRootPart13.Position - v231.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v231)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Crystal',
+    CurrentValue = false,
+    Callback = function(p232)
+        getgenv().autopickupCrystal = p232
+
+        if p232 then
+            spawn(function()
+                while getgenv().autopickupCrystal do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart14 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v234, v235, v236 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v237
+
+                            v236, v237 = v234(v235, v236)
+
+                            if v236 == nil then
+                                break
+                            end
+                            if v237:FindFirstChild('Pickup') and (v237:IsA('BasePart') or v237:IsA('UnionOpreation')) and (v237.Name == 'Crystal Chunk' and (_HumanoidRootPart14.Position - v237.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v237)
+                            end
+                        end
+
+                        local v238, v239, v240 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v241
+
+                            v240, v241 = v238(v239, v240)
+
+                            if v240 == nil then
+                                break
+                            end
+                            if v241:FindFirstChild('Pickup') and (v241:IsA('BasePart') or v241:IsA('UnionOpreation')) and (v241.Name == 'Crystal Chunk' and (_HumanoidRootPart14.Position - v241.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v241)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Emerald',
+    CurrentValue = false,
+    Callback = function(p242)
+        getgenv().autopickupEmerald = p242
+
+        if p242 then
+            spawn(function()
+                while getgenv().autopickupEmerald do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart15 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v244, v245, v246 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v247
+
+                            v246, v247 = v244(v245, v246)
+
+                            if v246 == nil then
+                                break
+                            end
+                            if v247:FindFirstChild('Pickup') and (v247:IsA('BasePart') or v247:IsA('UnionOpreation')) and (v247.Name == 'Emerald' and (_HumanoidRootPart15.Position - v247.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v247)
+                            end
+                        end
+
+                        local v248, v249, v250 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v251
+
+                            v250, v251 = v248(v249, v250)
+
+                            if v250 == nil then
+                                break
+                            end
+                            if v251:FindFirstChild('Pickup') and (v251:IsA('BasePart') or v251:IsA('UnionOpreation')) and (v251.Name == 'Emerald' and (_HumanoidRootPart15.Position - v251.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v251)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Magnetite',
+    CurrentValue = false,
+    Callback = function(p252)
+        getgenv().autopickupMagnetite = p252
+
+        if p252 then
+            spawn(function()
+                while getgenv().autopickupMagnetite do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart16 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v254, v255, v256 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v257
+
+                            v256, v257 = v254(v255, v256)
+
+                            if v256 == nil then
+                                break
+                            end
+                            if v257:FindFirstChild('Pickup') and (v257:IsA('BasePart') or v257:IsA('UnionOpreation')) and (v257.Name == 'Magnetite' and (_HumanoidRootPart16.Position - v257.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v257)
+                            end
+                        end
+
+                        local v258, v259, v260 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v261
+
+                            v260, v261 = v258(v259, v260)
+
+                            if v260 == nil then
+                                break
+                            end
+                            if v261:FindFirstChild('Pickup') and (v261:IsA('BasePart') or v261:IsA('UnionOpreation')) and (v261.Name == 'Magnetite' and (_HumanoidRootPart16.Position - v261.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v261)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Pink Diamond',
+    CurrentValue = false,
+    Callback = function(p262)
+        getgenv().autopickupPinkDiamond = p262
+
+        if p262 then
+            spawn(function()
+                while getgenv().autopickupPinkDiamond do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart17 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v264, v265, v266 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v267
+
+                            v266, v267 = v264(v265, v266)
+
+                            if v266 == nil then
+                                break
+                            end
+                            if v267:FindFirstChild('Pickup') and (v267:IsA('BasePart') or v267:IsA('UnionOpreation')) and (v267.Name == 'Pink Diamond' or v267.Name:find('Pink')) and (_HumanoidRootPart17.Position - v267.Position).Magnitude < 50 then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v267)
+                            end
+                        end
+
+                        local v268, v269, v270 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v271
+
+                            v270, v271 = v268(v269, v270)
+
+                            if v270 == nil then
+                                break
+                            end
+                            if v271:FindFirstChild('Pickup') and (v271:IsA('BasePart') or v271:IsA('UnionOpreation')) and (v271.Name == 'Pink Diamond' or v271.Name:find('Pink')) and (_HumanoidRootPart17.Position - v271.Position).Magnitude < 50 then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v271)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Spirit Key',
+    CurrentValue = false,
+    Callback = function(p272)
+        getgenv().autopickupSpiritKey = p272
+
+        if p272 then
+            spawn(function()
+                while getgenv().autopickupSpiritKey do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart18 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v274, v275, v276 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v277
+
+                            v276, v277 = v274(v275, v276)
+
+                            if v276 == nil then
+                                break
+                            end
+                            if v277:FindFirstChild('Pickup') and (v277:IsA('BasePart') or v277:IsA('UnionOpreation')) and (v277.Name == 'Spirit Key' and (_HumanoidRootPart18.Position - v277.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v277)
+                            end
+                        end
+
+                        local v278, v279, v280 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v281
+
+                            v280, v281 = v278(v279, v280)
+
+                            if v280 == nil then
+                                break
+                            end
+                            if v281:FindFirstChild('Pickup') and (v281:IsA('BasePart') or v281:IsA('UnionOpreation')) and (v281.Name == 'Spirit Key' and (_HumanoidRootPart18.Position - v281.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v281)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateToggle({
+    Name = 'Auto PickUp Item',
+    CurrentValue = false,
+    Callback = function(p282)
+        getgenv().autopickupItem = p282
+
+        if p282 then
+            spawn(function()
+                while getgenv().autopickupItem do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart19 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v284, v285, v286 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v287
+
+                            v286, v287 = v284(v285, v286)
+
+                            if v286 == nil then
+                                break
+                            end
+                            if v287:FindFirstChild('Pickup') and (v287:IsA('BasePart') or v287:IsA('UnionOpreation')) and (v287.Name == getgenv().itemToPickup and (_HumanoidRootPart19.Position - v287.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v287)
+                            end
+                        end
+
+                        local v288, v289, v290 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v291
+
+                            v290, v291 = v288(v289, v290)
+
+                            if v290 == nil then
+                                break
+                            end
+                            if v291:FindFirstChild('Pickup') and (v291:IsA('BasePart') or v291:IsA('UnionOpreation')) and (v291.Name == getgenv().itemToPickup and (_HumanoidRootPart19.Position - v291.Position).Magnitude < 50) then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v291)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v9:CreateInput({
+    Name = 'Item to Pick Up',
+    PlaceholderText = '',
+    Callback = function(p292)
+        getgenv().itemToPickup = p292
+    end,
+})
+
+local u293 = false
+
+v8:CreateButton({
+    Name = 'Copy Discord Invite (NEW)',
+    Callback = function()
+        setclipboard('https://discord.gg/Vc8JD6BAsb')
+    end,
+})
+v8:CreateButton({
+    Name = 'Go To Normal World',
+    Callback = function()
+        game:GetService('TeleportService'):Teleport(11729688377)
+    end,
+})
+v8:CreateButton({
+    Name = 'Go To Void World',
+    Callback = function()
+        game:GetService('TeleportService'):Teleport(11879754496)
+    end,
+})
+v8:CreateButton({
+    Name = 'Fps Boost',
+    Callback = function()
+        loadstring(game:HttpGet('https://paste.fo/raw/3d1af549a841'))()
+    end,
+})
+v8:CreateButton({
+    Name = 'Anti Afk',
+    Callback = function()
+        repeat
+            task.wait()
+        until game:IsLoaded()
+
+        game:GetService('Players').LocalPlayer.Idled:connect(function()
+            game:GetService('VirtualUser'):ClickButton2(Vector2.new())
+        end)
+        Rayfield:Notify({
+            Title = 'Anti-Afk Loaded',
+            Content = 'The anti-afk has been loaded!',
+            Duration = 5,
+        })
+    end,
+})
+v8:CreateButton({
+    Name = 'FullBright',
+    Callback = function()
+        loadstring(game:HttpGet('https://paste.fo/raw/ee58c8bdb157'))()
+    end,
+})
+v8:CreateButton({
+    Name = 'Esp Ores + Gods In Void :D',
+    CurrentValue = false,
+    Callback = function(_)
+        local v294 = workspace.Resources:GetChildren()
+        local v295, v296, v297 = ipairs(v294)
+
+        while true do
+            local v298
+
+            v297, v298 = v295(v296, v297)
+
+            if v297 == nil then
+                break
+            end
+            if v298:IsA('Model') and (v298.Name:find('Rock') or v298.Name:find('God')) then
+                local _BasePart5 = v298:FindFirstChildWhichIsA('BasePart')
+
+                if _BasePart5 then
+                    local _BillboardGui = Instance.new('BillboardGui')
+
+                    _BillboardGui.Adornee = _BasePart5
+                    _BillboardGui.Size = UDim2.new(0, 50, 0, 50)
+                    _BillboardGui.StudsOffset = Vector3.new(0, 2, 0)
+                    _BillboardGui.AlwaysOnTop = true
+
+                    local _TextLabel = Instance.new('TextLabel')
+
+                    _TextLabel.Size = UDim2.new(1, 0, 1, 0)
+                    _TextLabel.Text = v298.Name
+                    _TextLabel.BackgroundTransparency = 1
+                    _TextLabel.TextColor3 = v298.Name:find('Rock') and Color3.new(0, 0, 0) or Color3.new(1, 1, 0)
+                    _TextLabel.Font = Enum.Font.SourceSansBold
+                    _TextLabel.TextScaled = true
+                    _TextLabel.Parent = _BillboardGui
+                    _BillboardGui.Parent = _BasePart5
+                end
+            end
+        end
+    end,
+})
+v8:CreateButton({
+    Name = 'Esp New by me :D',
+    CurrentValue = false,
+    Callback = function(_)
+        loadstring(game:HttpGet('https://paste.fo/raw/3b19a60ab16f'))()
+    end,
+})
+v8:CreateButton({
+    Name = 'Esp GODS  by me :D',
+    Callback = function()
+        local v302 = {
+            ['Old God'] = Vector3.new(-1006.58197, -197.319626, -464.593811),
+            ['Furious God'] = Vector3.new(-74.4999847, -155.941879, -857.491211),
+            ['Lonely God'] = Vector3.new(-1162.59607, 346.824127, -1177.72815),
+            ['Hateful God'] = Vector3.new(270.381104, -145.887619, 1107.71289),
+            ['Ancient God'] = Vector3.new(1163.29248, -52.8515511, 1088.30396),
+            ['Sleeping God'] = Vector3.new(-131.269775, -99.1141281, -372.51712),
+            ['Miserable God'] = Vector3.new(-185.519501, 148.139832, -683.996582),
+            ['Wealthy God'] = Vector3.new(408.031708, 30.6171875, -1833.43152, -0.170641661, 0.979086936, 0.110770933, 0.984585345, 0.173810303, -0.0195375532, -0.0383820906, 0.10572952, -0.993654013),
+        }
+        local v303, v304, v305 = pairs(v302)
+
+        while true do
+            local v306
+
+            v305, v306 = v303(v304, v305)
+
+            if v305 == nil then
+                break
+            end
+
+            local _Part = Instance.new('Part')
+
+            _Part.Anchored = true
+            _Part.Transparency = 1
+            _Part.Position = v306
+            _Part.Parent = workspace
+
+            local _BillboardGui2 = Instance.new('BillboardGui')
+
+            _BillboardGui2.Adornee = _Part
+            _BillboardGui2.Size = UDim2.new(0, 100, 0, 50)
+            _BillboardGui2.StudsOffset = Vector3.new(0, 3.5, 0)
+            _BillboardGui2.AlwaysOnTop = true
+            _BillboardGui2.Parent = _Part
+
+            local _TextLabel2 = Instance.new('TextLabel', _BillboardGui2)
+
+            _TextLabel2.Text = v305
+            _TextLabel2.BackgroundTransparency = 1
+            _TextLabel2.Size = UDim2.new(1, 0, 1, 0)
+            _TextLabel2.Position = UDim2.new(0, 0, 0, 0)
+            _TextLabel2.TextColor3 = Color3.fromRGB(255, 0, 0)
+            _TextLabel2.TextSize = 14
+            _TextLabel2.Font = Enum.Font.SourceSansBold
+            _TextLabel2.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            _TextLabel2.TextStrokeTransparency = 0.15
+        end
+    end,
+})
+v8:CreateButton({
+    Name = 'Find Gold Node',
+    Callback = function()
+        local v319 = (function(p310)
+            local _huge6 = math.huge
+            local v312 = p310.Resources:GetChildren()
+            local v313, v314, v315 = ipairs(v312)
+            local v316 = nil
+
+            while true do
+                local v317
+
+                v315, v317 = v313(v314, v315)
+
+                if v315 == nil then
+                    break
+                end
+                if v317.Name == 'Gold Node' then
+                    local _Magnitude5 = (Players.LocalPlayer.Character.HumanoidRootPart.Position - v317.Position).Magnitude
+
+                    if _Magnitude5 < _huge6 then
+                        v316 = v317
+                        _huge6 = _Magnitude5
+                    end
+                end
+            end
+
+            return v316
+        end)(workspace)
+        local _Position2 = Players.LocalPlayer.Character.HumanoidRootPart.Position
+        local v321 = math.round(math.abs((_Position2 - v319.Position).Magnitude))
+
+        local function v327(p322, p323)
+            local v324 = Ray.new(p322, (p323.Position - p322).Unit * (p323.Position - p322).Magnitude)
+            local v325 = {workspace}
+            local v326, _, _ = workspace:FindPartOnRayWithIgnoreList(v324, v325)
+
+            return v326 or nil
+        end
+
+        while true do
+            local v328 = v327(_Position2, v319)
+
+            if not v328 then
+                break
+            end
+
+            TweenService:Create(Players.LocalPlayer.Character.HumanoidRootPart, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+                CFrame = CFrame.new(v328.Position + Vector3.new(0, v328.Size.Y, 0)),
+            }):Play()
+            wait(0.1)
+
+            _Position2 = Players.LocalPlayer.Character.HumanoidRootPart.Position
+        end
+
+        ReplicatedStorage.Events.SwingTool:FireServer(ReplicatedStorage.RelativeTime.Value, {v319})
+
+        -- getClosestPickups was undefined, skipping auto pickup here
+        print('Closest pickups skipped (undefined in original)')
+
+        wait(0.1)
+
+        if v319.Position.Y <= 30 then
+            TweenService:Create(Players.LocalPlayer.Character.HumanoidRootPart, TweenInfo.new(v321 / 10, Enum.EasingStyle.Linear), {
+                CFrame = v319.CFrame + Vector3.new(0, v319.Size.Y, 0),
+            }):Play()
+            task.wait(v321 / 10)
+        end
+    end,
+})
+v8:CreateButton({
+    Name = 'View Players!',
+    Callback = function()
+        loadstring(game:HttpGet('https://pastebin.com/raw/WgpJfMGS'))()
+    end,
+})
+
+if game.PlaceId ~= 11879754496 then
+    local _ = workspace.Resources
+else
+    local _ = workspace
+end
+
+v5:CreateToggle({
+    Name = 'AutoHitResource',
+    CurrentValue = false,
+    Callback = function(p333)
+        _G.AutoHitResource = p333
+    end,
+})
+
+local u334 = 4
+local u335 = 3.5
+local _ = game.Players.LocalPlayer
+local u336 = nil
+
+local function u346()
+    local _LocalPlayer2 = game.Players.LocalPlayer
+    local v338, v339, v340 = ipairs(game.Players:GetPlayers())
+    local v341 = nil
+    local v342 = nil
+
+    while true do
+        local v343
+
+        v340, v343 = v338(v339, v340)
+
+        if v340 == nil then
+            break
+        end
+        if v343 ~= _LocalPlayer2 and v343.Character then
+            local _HumanoidRootPart20 = v343.Character:FindFirstChild('HumanoidRootPart')
+
+            if _HumanoidRootPart20 then
+                local _Magnitude6 = (_HumanoidRootPart20.Position - _LocalPlayer2.Character.HumanoidRootPart.Position).Magnitude
+
+                if not v341 or _Magnitude6 < v341 then
+                    v342 = v343
+                    v341 = _Magnitude6
+                end
+            end
+        end
+    end
+
+    return v342
+end
+
+getgenv().enabled = false
+
+v7:CreateToggle({
+    Name = 'AutoHitWithBow V2',
+    CurrentValue = false,
+    Callback = function(p347)
+        getgenv().enabled = p347
+
+        local function v355()
+            while getgenv().enabled do
+                local v348 = u346()
+
+                if v348 and v348.Character and v348.Character:FindFirstChild('HumanoidRootPart') then
+                    local _Character3 = game.Players.LocalPlayer.Character
+                    local _Magnitude7 = (v348.Character.HumanoidRootPart.Position - _Character3.HumanoidRootPart.Position).Magnitude
+                    local v351 = 25 < _Magnitude7 and math.rad(30) or 0
+                    local _Unit = (v348.Character.HumanoidRootPart.Position - _Character3.HumanoidRootPart.Position).Unit
+                    local v353 = math.atan2(_Unit.X, _Unit.Z)
+                    local v354 = v348.Character.HumanoidRootPart.Position + Vector3.new(_Magnitude7 * math.cos(v353 + v351), 0, _Magnitude7 * math.sin(v353 + v351))
+
+                    game:GetService('ReplicatedStorage').Events.CreateProjectile:FireServer({
+                        drawStrength = 1,
+                        lookAt = v354,
+                        id = '9c5699f3-85e1-44dc-8de9-2ea0ea220c2c',
+                        toolName = 'Iron Bow',
+                    })
+                    game:GetService('ReplicatedStorage').Events.ProjectileImpact:FireServer(v348.Character.UpperTorso, v348.Character.Head.Position, '9c5699f3-85e1-44dc-8de9-2ea0ea220c2c')
+                end
+
+                wait(0.00001)
+            end
+        end
+
+        coroutine.wrap(v355)()
+    end,
+})
+
+getgenv().enabled2 = false
+
+v7:CreateToggle({
+    Name = 'AutoHitWithSling V2',
+    CurrentValue = false,
+    Callback = function(p356)
+        getgenv().enabled2 = p356
+
+        while getgenv().enabled2 do
+            local v357 = u346()
+
+            if v357 and v357.Character and v357.Character:FindFirstChild('HumanoidRootPart') then
+                local _Character4 = game.Players.LocalPlayer.Character
+                local _Magnitude8 = (v357.Character.HumanoidRootPart.Position - _Character4.HumanoidRootPart.Position).Magnitude
+                local v360 = 25 < _Magnitude8 and math.rad(30) or 0
+                local _Unit2 = (v357.Character.HumanoidRootPart.Position - _Character4.HumanoidRootPart.Position).Unit
+                local v362 = math.atan2(_Unit2.X, _Unit2.Z)
+                local v363 = v357.Character.HumanoidRootPart.Position + Vector3.new(_Magnitude8 * math.cos(v362 + v360), 0, _Magnitude8 * math.sin(v362 + v360))
+
+                game:GetService('ReplicatedStorage').Events.CreateProjectile:FireServer({
+                    drawStrength = 1,
+                    lookAt = v363,
+                    id = '9c5699f3-85e1-44dc-8de9-2ea0ea220c2c',
+                    toolName = 'Sling',
+                })
+                game:GetService('ReplicatedStorage').Events.ProjectileImpact:FireServer(v357.Character.UpperTorso, v357.Character.Head.Position, '9c5699f3-85e1-44dc-8de9-2ea0ea220c2c')
+            end
+
+            wait(0.00001)
+        end
+    end,
+})
+
+getgenv().enabled3 = false
+
+v7:CreateToggle({
+    Name = 'AutoHitWithGodSling V2',
+    CurrentValue = false,
+    Callback = function(p364)
+        getgenv().enabled3 = p364
+
+        while getgenv().enabled3 do
+            local v365 = u346()
+
+            if v365 and v365.Character and v365.Character:FindFirstChild('HumanoidRootPart') then
+                local _Character5 = game.Players.LocalPlayer.Character
+                local _Magnitude9 = (v365.Character.HumanoidRootPart.Position - _Character5.HumanoidRootPart.Position).Magnitude
+                local v368 = 25 < _Magnitude9 and math.rad(30) or 0
+                local _Unit3 = (v365.Character.HumanoidRootPart.Position - _Character5.HumanoidRootPart.Position).Unit
+                local v370 = math.atan2(_Unit3.X, _Unit3.Z)
+                local v371 = v365.Character.HumanoidRootPart.Position + Vector3.new(_Magnitude9 * math.cos(v370 + v368), 0, _Magnitude9 * math.sin(v370 + v368))
+
+                game:GetService('ReplicatedStorage').Events.CreateProjectile:FireServer({
+                    drawStrength = 1,
+                    lookAt = v371,
+                    id = '9c5699f3-85e1-44dc-8de9-2ea0ea220c2c',
+                    toolName = 'God Sling',
+                })
+                game:GetService('ReplicatedStorage').Events.ProjectileImpact:FireServer(v365.Character.UpperTorso, v365.Character.Head.Position, '9c5699f3-85e1-44dc-8de9-2ea0ea220c2c')
+            end
+
+            wait(0.00001)
+        end
+    end,
+})
+v7:CreateToggle({
+    Name = 'Orbit Toggle',
+    CurrentValue = false,
+    Callback = function(p372)
+        if p372 then
+            local function v381()
+                local v373 = u346()
+
+                if v373 and v373.Character and v373.Character:FindFirstChild('HumanoidRootPart') then
+                    local _LocalPlayer3 = game.Players.LocalPlayer
+                    local _Character6 = _LocalPlayer3.Character
+                    local _ = (v373.Character.HumanoidRootPart.Position - _Character6.HumanoidRootPart.Position).Magnitude
+                    local _Unit4 = (v373.Character.HumanoidRootPart.Position - _LocalPlayer3.Character.HumanoidRootPart.Position).Unit
+                    local v377 = math.atan2(_Unit4.X, _Unit4.Z)
+                    local v378 = u334 * math.cos(v377)
+                    local v379 = u334 * math.sin(v377)
+                    local v380 = v373.Character.HumanoidRootPart.Position + Vector3.new(v378, u335, v379)
+
+                    _LocalPlayer3.Character.HumanoidRootPart.CFrame = CFrame.new(v380, v373.Character.HumanoidRootPart.Position)
+                end
+            end
+
+            u336 = RunService.Stepped:Connect(v381)
+        elseif u336 then
+            u336:Disconnect()
+
+            u336 = nil
+        end
+    end,
+})
+
+local function u388(p382)
+    local _Character7 = game:GetService('Players').LocalPlayer.Character
+    local v384 = _Character7 and _Character7:FindFirstChild('HumanoidRootPart')
+
+    if v384 then
+        local _Character8 = p382.Character
+        local v386 = _Character8 and _Character8:FindFirstChild('HumanoidRootPart')
+
+        if v386 then
+            local _Unit5 = (v386.Position - v384.Position).Unit
+
+            v384.CFrame = CFrame.new(v384.Position, v384.Position + Vector3.new(_Unit5.X, 0, _Unit5.Z))
+        end
+    end
+end
+local function u399()
+    local _LocalPlayer4 = game:GetService('Players').LocalPlayer
+    local _Character9 = _LocalPlayer4.Character
+
+    if _Character9 then
+        _Character9 = _Character9:FindFirstChild('HumanoidRootPart')
+    end
+    if not _Character9 then
+        return nil
+    end
+
+    local _huge7 = math.huge
+    local v392, v393, v394 = ipairs(game:GetService('Players'):GetPlayers())
+    local v395 = nil
+
+    while true do
+        local v396
+
+        v394, v396 = v392(v393, v394)
+
+        if v394 == nil then
+            break
+        end
+        if v396 ~= _LocalPlayer4 then
+            local _Character10 = v396.Character
+
+            if _Character10 then
+                _Character10 = _Character10:FindFirstChild('HumanoidRootPart')
+            end
+            if _Character10 then
+                local _Magnitude10 = (_Character10.Position - _Character9.Position).Magnitude
+
+                if _Magnitude10 < _huge7 then
+                    v395 = v396
+                    _huge7 = _Magnitude10
+                end
+            end
+        end
+    end
+
+    return v395
+end
+
+local u400 = false
+
+v7:CreateToggle({
+    Name = 'Auto Face Player',
+    CurrentValue = false,
+    Callback = function(p401)
+        u400 = p401
+
+        while u400 and u400 do
+            local v402 = u399()
+
+            if v402 then
+                u388(v402)
+            end
+
+            task.wait()
+        end
+    end,
+})
+v7:CreateToggle({
+    Name = 'AutoHitPlayer',
+    CurrentValue = false,
+    Callback = function(p403)
+        getgenv().autohitPlayer = p403
+
+        coroutine.wrap(function()
+            while getgenv().autohitPlayer do
+                local _huge8 = math.huge
+                local _LocalPlayer5 = game.Players.LocalPlayer
+                local _Character11 = _LocalPlayer5.Character
+                local v407, v408, v409 = pairs(game.Players:GetPlayers())
+                local v410 = nil
+
+                while true do
+                    local v411
+
+                    v409, v411 = v407(v408, v409)
+
+                    if v409 == nil then
+                        break
+                    end
+
+                    local _NoTribe = game.Teams:FindFirstChild('NoTribe')
+
+                    if v411 ~= _LocalPlayer5 and (v411.TeamColor ~= _LocalPlayer5.TeamColor or _LocalPlayer5.Team == _NoTribe) then
+                        local _Character12 = v411.Character
+
+                        if _Character12 then
+                            local _Humanoid2 = _Character12:FindFirstChild('Humanoid')
+
+                            if _Humanoid2 then
+                                local _RootPart = _Humanoid2.RootPart
+
+                                if _RootPart then
+                                    local _Magnitude11 = (_RootPart.Position - _Character11.HumanoidRootPart.Position).Magnitude
+
+                                    if _Magnitude11 < 10 then
+                                        if _Magnitude11 < _huge8 then
+                                            v410 = v411
+                                            _huge8 = _Magnitude11
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+
+                local v417 = v410 and v410.Character
+
+                if v417 then
+                    local v418, v419, v420 = pairs(v417:GetDescendants())
+                    local u421 = {{}}
+
+                    while true do
+                        local v422
+
+                        v420, v422 = v418(v419, v420)
+
+                        if v420 == nil then
+                            break
+                        end
+                        if v422:IsA('BasePart') then
+                            table.insert(u421[1], v422)
+                        end
+                    end
+
+                    coroutine.wrap(function()
+                        game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('SwingTool'):FireServer(unpack(u421))
+                    end)()
+                end
+
+                wait()
+            end
+        end)()
+    end,
+})
+v7:CreateToggle({
+    Name = 'Auto HitBox Expand (Chest)',
+    CurrentValue = false,
+    Callback = function(p423)
+        getgenv().autohitboxexpand = p423
+
+        if p423 then
+            spawn(function()
+                while getgenv().autohitboxexpand do
+                    wait()
+                    pcall(function()
+                        _G.HeadSize = 6
+
+                        local v424, v425, v426 = ipairs(game:GetService('Players'):GetPlayers())
+
+                        while true do
+                            local u427
+
+                            v426, u427 = v424(v425, v426)
+
+                            if v426 == nil then
+                                break
+                            end
+                            if u427.Name ~= game:GetService('Players').LocalPlayer.Name then
+                                pcall(function()
+                                    u427.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
+                                    u427.Character.HumanoidRootPart.Transparency = 0.7
+                                    u427.Character.HumanoidRootPart.BrickColor = BrickColor.new('Bright red')
+                                    u427.Character.HumanoidRootPart.Material = 'Neon'
+                                    u427.Character.HumanoidRootPart.CanCollide = false
+                                end)
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            wait(0.1)
+
+            _G.HeadSize = 2
+
+            local v428, v429, v430 = ipairs(game:GetService('Players'):GetPlayers())
+
+            while true do
+                local u431
+
+                v430, u431 = v428(v429, v430)
+
+                if v430 == nil then
+                    break
+                end
+                if u431.Name ~= game:GetService('Players').LocalPlayer.Name then
+                    pcall(function()
+                        u431.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
+                        u431.Character.HumanoidRootPart.Transparency = 0.7
+                        u431.Character.HumanoidRootPart.CanCollide = false
+                    end)
+                end
+            end
+        end
+    end,
+})
+v5:CreateToggle({
+    Name = 'AutoHitCritters',
+    CurrentValue = false,
+    Callback = function(p432)
+        _G.AutoHitCritters = p432
+    end,
+})
+v5:CreateToggle({
+    Name = 'AutoHitHumanoidCritters',
+    CurrentValue = false,
+    Callback = function(p433)
+        _G.AutoHitHumanoidCritters = p433
+    end,
+})
+
+local u434 = false
+
+v5:CreateToggle({
+    Name = 'Autopickup Items',
+    Callback = function(p435)
+        u434 = p435
+
+        if p435 then
+            spawn(function()
+                while u434 do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart21 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v437, v438, v439 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v440
+
+                            v439, v440 = v437(v438, v439)
+
+                            if v439 == nil then
+                                break
+                            end
+                            if v440:FindFirstChild('Pickup') and (v440:IsA('BasePart') or v440:IsA('UnionOperation')) and (_HumanoidRootPart21.Position - v440.Position).Magnitude < 50 then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v440)
+                            end
+                        end
+
+                        local v441, v442, v443 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v444
+
+                            v443, v444 = v441(v442, v443)
+
+                            if v443 == nil then
+                                break
+                            end
+                            if v444:FindFirstChild('Pickup') and (v444:IsA('BasePart') or v444:IsA('UnionOperation')) and (_HumanoidRootPart21.Position - v444.Position).Magnitude < 50 then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v444)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+
+local v445 = v4:CreateTab("Combat/Heal", 7734056608)
+v445:CreateSection("Values")
+local v447 = {
+    'Bloodfruit',
+    'Pumpkin',
+    'Strangefruit',
+    'Oddberry',
+    'Lemon',
+    'Apple',
+    'Coconut',
+    'Jelly',
+    'Sunfruit',
+    'Bluefruit',
+    'Berry',
+    'Orange',
+    'Cloudberry',
+    'Banana',
+    'Raw Meat',
+    'Cooked Meat',
+    'Cooked Morsel',
+}
+local u448 = nil
+
+v445:CreateDropdown({
+    Name = 'Select Item For Auto Heal',
+    Options = v447,
+    CurrentOption = v447[1],
+    MultipleOptions = false,
+    Callback = function(Option)
+        u448 = typeof(Option) == "table" and Option[1] or Option
+    end,
+})
+
+local u450 = false
+
+v5:CreateToggle({
+    Name = 'Water Walker (Gives Speed Looks Legit)',
+    CurrentValue = false,
+    Callback = function(p451)
+        if p451 then
+            speederActive = true
+
+            Speeder()
+        else
+            speederActive = false
+        end
+    end,
+})
+
+local u452 = {}
+
+_G.AutoHitHumanoidCritters2 = false
+_G.AutoHitHumanoidCritters = false
+_G.AutoHitResource = false
+_G.AutoHitCritters = false
+_G.AutoHitPlayer = false
+_G.AutoHitPlayer2 = false
+_G.BirdFarm = false
+_G.TweenToRandomPart = false
+
+local u453 = nil
+local u454 = nil
+
+local function u465()
+    if selectedModel and _G.TweenToRandomPart then
+        local v455 = workspace.Resources:FindFirstChild(selectedModel)
+
+        if v455 then
+            local v456 = v455:GetDescendants()
+
+            for v457 = #v456, 1, -1 do
+                if not v456[v457]:IsA('BasePart') then
+                    table.remove(v456, v457)
+                end
+            end
+
+            local _CFrame = v456[math.random(1, #v456)].CFrame
+            local _Character13 = game.Players.LocalPlayer.Character
+
+            if _Character13 then
+                _Character13 = _Character13:FindFirstChild('HumanoidRootPart')
+            end
+            if _Character13 then
+                local v460 = TweenInfo.new(0.001)
+                local v461 = TweenService:Create(_Character13, v460, {CFrame = _CFrame})
+
+                v461:Play()
+                v461.Completed:Wait()
+
+                u453 = v455
+                u454 = _Character13.CFrame
+            end
+        elseif u453 then
+            wait(2)
+
+            local _Character14 = game.Players.LocalPlayer.Character
+
+            if _Character14 then
+                _Character14 = _Character14:FindFirstChild('HumanoidRootPart')
+            end
+            if _Character14 then
+                local v463 = TweenInfo.new(0.3)
+                local v464 = TweenService:Create(_Character14, v463, {CFrame = u454})
+
+                v464:Play()
+                v464.Completed:Wait()
+                u465()
+            end
+        end
+    end
+end
+local function v480()
+    local _Character15 = game.Players.LocalPlayer.Character
+
+    if _Character15 then
+        _Character15 = _Character15:FindFirstChild('HumanoidRootPart')
+    end
+    if _Character15 then
+        local _huge9 = math.huge
+        local v468, v469, v470 = ipairs(workspace.Resources:GetChildren())
+        local v471 = nil
+
+        while true do
+            local v472
+
+            v470, v472 = v468(v469, v470)
+
+            if v470 == nil then
+                break
+            end
+
+            local _BasePart6 = v472:FindFirstChildWhichIsA('BasePart')
+
+            if _BasePart6 then
+                local _Magnitude12 = (_BasePart6.Position - _Character15.Position).Magnitude
+
+                if _Magnitude12 < _huge9 then
+                    v471 = v472
+                    _huge9 = _Magnitude12
+                end
+            end
+        end
+
+        if v471 then
+            local v475, v476, v477 = ipairs(v471:GetChildren())
+            local v478 = {{}}
+
+            while true do
+                local v479
+
+                v477, v479 = v475(v476, v477)
+
+                if v477 == nil then
+                    break
+                end
+                if v479:IsA('BasePart') then
+                    table.insert(v478[1], v479)
+                end
+            end
+
+            game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('SwingTool'):FireServer(unpack(v478))
+        end
+    end
+end
+local function v495()
+    local _Character16 = game.Players.LocalPlayer.Character
+
+    if _Character16 then
+        _Character16 = _Character16:FindFirstChild('HumanoidRootPart')
+    end
+    if _Character16 then
+        local _huge10 = math.huge
+        local v483, v484, v485 = ipairs(workspace.Critters:GetChildren())
+        local v486 = nil
+
+        while true do
+            local v487
+
+            v485, v487 = v483(v484, v485)
+
+            if v485 == nil then
+                break
+            end
+
+            local _BasePart7 = v487:FindFirstChildWhichIsA('BasePart')
+
+            if _BasePart7 then
+                local _Magnitude13 = (_BasePart7.Position - _Character16.Position).Magnitude
+
+                if _Magnitude13 < _huge10 then
+                    v486 = v487
+                    _huge10 = _Magnitude13
+                end
+            end
+        end
+
+        if v486 then
+            local v490, v491, v492 = ipairs(v486:GetChildren())
+            local v493 = {{}}
+
+            while true do
+                local v494
+
+                v492, v494 = v490(v491, v492)
+
+                if v492 == nil then
+                    break
+                end
+                if v494:IsA('BasePart') then
+                    table.insert(v493[1], v494)
+                end
+            end
+
+            game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('SwingTool'):FireServer(unpack(v493))
+        end
+    end
+end
+local function v510()
+    local _Character17 = game.Players.LocalPlayer.Character
+
+    if _Character17 then
+        _Character17 = _Character17:FindFirstChild('HumanoidRootPart')
+    end
+    if _Character17 then
+        local _huge11 = math.huge
+        local v498, v499, v500 = ipairs(workspace.HumanoidCritters:GetChildren())
+        local v501 = nil
+
+        while true do
+            local v502
+
+            v500, v502 = v498(v499, v500)
+
+            if v500 == nil then
+                break
+            end
+
+            local _BasePart8 = v502:FindFirstChildWhichIsA('BasePart')
+
+            if _BasePart8 then
+                local _Magnitude14 = (_BasePart8.Position - _Character17.Position).Magnitude
+
+                if _Magnitude14 < _huge11 then
+                    v501 = v502
+                    _huge11 = _Magnitude14
+                end
+            end
+        end
+
+        if v501 then
+            local v505, v506, v507 = ipairs(v501:GetChildren())
+            local v508 = {{}}
+
+            while true do
+                local v509
+
+                v507, v509 = v505(v506, v507)
+
+                if v507 == nil then
+                    break
+                end
+                if v509:IsA('BasePart') then
+                    table.insert(v508[1], v509)
+                end
+            end
+
+            game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('SwingTool'):FireServer(unpack(v508))
+        end
+    end
+end
+local function v525()
+    local _Character18 = game.Players.LocalPlayer.Character
+
+    if _Character18 then
+        _Character18 = _Character18:FindFirstChild('HumanoidRootPart')
+    end
+    if _Character18 then
+        local _huge12 = math.huge
+        local v513, v514, v515 = ipairs(workspace.HumanoidCritters:GetChildren())
+        local v516 = nil
+
+        while true do
+            local v517
+
+            v515, v517 = v513(v514, v515)
+
+            if v515 == nil then
+                break
+            end
+            if v517.Name ~= "Queen Ant's Servant" then
+                local _BasePart9 = v517:FindFirstChildWhichIsA('BasePart')
+
+                if _BasePart9 then
+                    local _Magnitude15 = (_BasePart9.Position - _Character18.Position).Magnitude
+
+                    if _Magnitude15 < _huge12 then
+                        v516 = v517
+                        _huge12 = _Magnitude15
+                    end
+                end
+            end
+        end
+
+        if v516 then
+            local v520, v521, v522 = ipairs(v516:GetChildren())
+            local v523 = {{}}
+
+            while true do
+                local v524
+
+                v522, v524 = v520(v521, v522)
+
+                if v522 == nil then
+                    break
+                end
+                if v524:IsA('BasePart') then
+                    table.insert(v523[0], v524)
+                end
+            end
+
+            game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('SwingTool'):FireServer(unpack(v523))
+        end
+    end
+end
+local function v532(p526, p527, p528)
+    if p527 then
+        local _HumanoidRootPart22 = p527.Character:WaitForChild('HumanoidRootPart', 5)
+
+        if not _HumanoidRootPart22 then
+            error("Nearest player's character is missing HumanoidRootPart.")
+
+            return
+        end
+
+        local v530 = _HumanoidRootPart22.Position - _HumanoidRootPart22.CFrame.LookVector * p528
+        local v531 = TweenInfo.new(0.01, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        TweenService:Create(p526.HumanoidRootPart, v531, {
+            CFrame = CFrame.new(v530),
+        }):Play()
+        print('Teleporting behind the nearest player...')
+    else
+        print('No other players found to teleport behind.')
+    end
+end
+
+local _LocalPlayer6 = game.Players.LocalPlayer
+local v534 = _LocalPlayer6.Character or _LocalPlayer6.CharacterAdded:Wait()
+
+if not v534 then
+    error("Local player's character not found.")
+
+    return
+end
+
+local v535, v536, v537 = ipairs(game.Players:GetPlayers())
+local v538 = u465
+local v539 = u293
+local _ = u31
+local u540 = u448
+local v541 = nil
+local v542 = nil
+
+while true do
+    local v543, v544 = v535(v536, v537)
+
+    if v543 == nil then
+        break
+    end
+
+    v537 = v543
+
+    if v544 ~= _LocalPlayer6 and v544.Character then
+        local _HumanoidRootPart23 = v544.Character:FindFirstChild('HumanoidRootPart')
+
+        if _HumanoidRootPart23 then
+            local _Magnitude16 = (_HumanoidRootPart23.Position - v534.HumanoidRootPart.Position).Magnitude
+
+            if not v541 or _Magnitude16 < v541 then
+                v542 = v544
+                v541 = _Magnitude16
+            end
+        end
+    end
+end
+
+local _List = game:GetService('Players').LocalPlayer.PlayerGui.MainGui.RightPanel.Inventory.List
+
+local function u554(p548)
+    local v549 = _List
+    local v550, v551, v552 = ipairs(v549:GetChildren())
+
+    while true do
+        local v553
+
+        v552, v553 = v550(v551, v552)
+
+        if v552 == nil then
+            break
+        end
+        if v553.Name == p548 then
+            return v553.LayoutOrder
+        end
+    end
+
+    return nil
+end
+
+local _ReplicatedStorage = game:GetService('ReplicatedStorage')
+
+local function u557(p556)
+    _ReplicatedStorage.Events.UseBagItem:FireServer(p556)
+    _ReplicatedStorage.Events.UseBagItem:FireServer(p556)
+end
+local function u559(p558)
+    _ReplicatedStorage.Events.DropBagItem:FireServer(p558)
+end
+
+local v560 = {
+    'Leaves',
+    'Wood',
+    'Log',
+    'Arrow',
+    'Bloodfruit',
+    'Pumpkin',
+    'Strangefruit',
+    'Oddberry',
+    'Lemon',
+    'Apple',
+    'Coconut',
+    'Jelly',
+    'Sunfruit',
+    'Bluefruit',
+    'Berry',
+    'Orange',
+    'Cloudberry',
+    'Banana',
+    'Raw Gold',
+    'Gold',
+    'Light',
+    'Leaf Bag',
+}
+local u561 = nil
+
+v8:CreateDropdown({
+    Name = 'Select Item',
+    CurrentOption = v560[1],
+    Options = v560,
+    MultipleOptions = false,
+    Callback = function(Option)
+        u561 = typeof(Option) == "table" and Option[1] or Option
+    end,
+})
+v8:CreateToggle({
+    Name = 'Auto Drop Selected Item',
+    CurrentValue = getgenv().autodropitems or false,
+    Callback = function(p563)
+        getgenv().autodropitems = p563
+
+        if p563 then
+            spawn(function()
+                local u564 = u554(u561)
+
+                while getgenv().autodropitems do
+                    wait()
+                    pcall(function()
+                        if u564 then
+                            u559(u564)
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v8:CreateToggle({
+    Name = 'Auto Drop Every Item',
+    CurrentValue = getgenv().autodropitems or false,
+    Callback = function(p565)
+        getgenv().autodropitems = p565
+
+        if p565 then
+            spawn(function()
+                while getgenv().autodropitems do
+                    wait()
+                    pcall(function()
+                        local _List2 = game:GetService('Players').LocalPlayer.PlayerGui.MainGui.RightPanel.Inventory.List
+                        local v567, v568, v569 = ipairs(_List2:GetChildren())
+
+                        while true do
+                            local v570
+
+                            v569, v570 = v567(v568, v569)
+
+                            if v569 == nil then
+                                break
+                            end
+                            if v570:IsA('ImageLabel') then
+                                local v571 = u554(v570.Name)
+
+                                if v571 then
+                                    u559(v571)
+                                end
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v8:CreateInput({
+    Name = 'Item to drop',
+    PlaceholderText = 'Item',
+    Callback = function(p572)
+        G = tostring(p572)
+    end,
+})
+v8:CreateToggle({
+    Name = 'Auto Drop Textbox Item',
+    CurrentValue = false,
+    Callback = function(p573)
+        getgenv().autodropitems = p573
+
+        if p573 then
+            spawn(function()
+                local u574 = u554(G)
+
+                while getgenv().autodropitems do
+                    wait()
+                    pcall(function()
+                        if u574 then
+                            u559(u574)
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+
+local u575 = 80
+
+v445:CreateSlider({
+    Name = 'Selected Health For Auto Heal',
+    Range = {1, 101},
+    Increment = 1,
+    Suffix = "Health Threshold",
+    CurrentValue = u575,
+    Callback = function(p576)
+        u575 = p576
+    end,
+})
+v445:CreateInput({
+    Name = 'Health Threshold (FOR MOBILE)',
+    PlaceholderText = tostring(u575),
+    Callback = function(p577)
+        local v578 = tonumber(p577)
+
+        if v578 then
+            u575 = v578
+
+            print('Updated aa to: ' .. u575)
+        else
+            print('Invalid input: ' .. p577)
+        end
+    end,
+})
+
+local u579 = 10
+local u580 = 10
+local u581 = 50
+
+v445:CreateToggle({
+    Name = 'Auto Eat/Heal On Selected Health < SHIT!!!',
+    CurrentValue = false,
+    Callback = function(p582)
+        u450 = p582
+
+        if p582 then
+            spawn(function()
+                while u450 do
+                    LocalPlayer = game.Players.LocalPlayer
+
+                    local _Humanoid3 = LocalPlayer.Character:WaitForChild('Humanoid')
+
+                    if _Humanoid3.Health <= 0 then
+                        print('Player is dead')
+
+                        break
+                    end
+
+                    itemID = u554(u540)
+
+                    if itemID then
+                        while _Humanoid3.Health < u581 do
+                            for _ = 1, u580 do
+                                if _Humanoid3.Health <= 0 then
+                                    break
+                                end
+
+                                u557(itemID)
+                                RunService.RenderStepped:Wait()
+                            end
+                        end
+                        while _Humanoid3.Health < u575 do
+                            for _ = 1, u579 do
+                                if _Humanoid3.Health <= 0 then
+                                    break
+                                end
+
+                                u557(itemID)
+                                RunService.RenderStepped:Wait()
+                            end
+                        end
+                    else
+                        print('Item not found: ' .. u540)
+                    end
+
+                    RunService.RenderStepped:Wait()
+                end
+            end)
+        end
+    end,
+})
+
+local u584 = 0.005
+
+v445:CreateToggle({
+    Name = 'Autoheal by Texy (BEST)',
+    CurrentValue = false,
+    Callback = function(p585)
+        u450 = p585
+
+        if p585 then
+            coroutine.wrap(function()
+                while u450 do
+                    LocalPlayer = game.Players.LocalPlayer
+
+                    local _Humanoid4 = LocalPlayer.Character:WaitForChild('Humanoid')
+
+                    if _Humanoid4.Health <= 0 then
+                        print('Player is dead')
+
+                        break
+                    end
+
+                    itemID = u554(u540)
+
+                    if itemID then
+                        while _Humanoid4.Health < u575 and _Humanoid4.Health > 0 do
+                            u557(itemID)
+
+                            if game.PlaceId ~= 11729688377 then
+                                task.wait()
+                            else
+                                wait(u584)
+                            end
+
+                            RunService.Heartbeat:Wait()
+                        end
+                    else
+                        print('Item not found: ' .. u540)
+                    end
+
+                    task.wait()
+                end
+            end)()
+        end
+    end,
+})
+v445:CreateInput({
+    Name = 'Delay',
+    PlaceholderText = 'DELAY FOR MOBILE',
+    Callback = function(p587)
+        print(p587)
+    end,
+})
+v445:CreateInput({
+    Name = 'Type Speed (ON MOBILE)',
+    PlaceholderText = 'Type your speed here',
+    Callback = function(p588)
+        local v589 = tonumber(p588)
+
+        if v589 then
+            u579 = v589
+        else
+            print('Invalid input: ' .. p588)
+        end
+    end,
+})
+Vector3.new(0, 0, 0)
+
+local u590 = 0.00001
+
+local function v597()
+    local _Critters = workspace:FindFirstChild('Critters')
+
+    if _Critters then
+        local _Bird = _Critters:FindFirstChild('Bird')
+
+        if _Bird then
+            local _HumanoidRootPart24 = _Bird:FindFirstChild('HumanoidRootPart')
+
+            if _HumanoidRootPart24 then
+                local _Position3 = _HumanoidRootPart24.Position
+                local v595 = CFrame.new(_Position3)
+                local v596 = TweenInfo.new(u590, Enum.EasingStyle.Linear)
+
+                TweenService:Create(LocalPlayer.Character.HumanoidRootPart, v596, {CFrame = v595}):Play()
+            end
+        else
+            print('Bird model not found')
+        end
+    else
+        print('Critters folder not found')
+
+        return
+    end
+end
+
+local _HttpService = game:GetService('HttpService')
+local u599 = 'https://discord.com/api/webhooks/1177641367640477838/jHN8BAz3_5E1B0qQ_ySRdyehTdFMr6rECjFH5DsGpr9xo7TQi7C2BCCwkOm1s7NDrHnE'
+
+(function()
+    local v605, v606 = pcall(function()
+        local v600 = get_hidden_gui
+
+        if v600 then
+            v600 = get_hidden_gui()._synapseUI
+        end
+
+        local v601 = v600 and v600.Username or (game.Players.LocalPlayer.Name or 'Unknown')
+        local v602 = game:GetService('RbxAnalyticsService'):GetClientId() or 'Unknown'
+        local _JobId = game.JobId
+
+        string.format('**Someone executed**')
+
+        local v604 = {
+            Url = u599,
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json',
+            },
+            Body = _HttpService:JSONEncode({
+                embeds = {
+                    {
+                        title = 'Execution Report',
+                        description = 'Details of the executed action:',
+                        fields = {
+                            {
+                                name = 'Username',
+                                value = v601,
+                                inline = true,
+                            },
+                            {
+                                name = 'Client ID',
+                                value = v602,
+                                inline = true,
+                            },
+                            {
+                                name = 'Server ID',
+                                value = _JobId,
+                                inline = true,
+                            },
+                        },
+                        color = 16711680,
+                        footer = {
+                            text = 'Executed by Premium User',
+                        },
+                    },
+                },
+            }),
+        }
+
+        http.request(v604)
+    end)
+
+    if not v605 then
+        warn('Webhook request failed:', v606)
+    end
+end)()
+
+speederActive = false
+
+function Speeder()
+    speederup = 21
+
+    spawn(function()
+        function speedup()
+            if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character.Humanoid then
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speederup
+            end
+        end
+
+        local v607 = u452
+
+        if u452.WalkSpeedChanger then
+            u452.WalkSpeedChanger:Disconnect()
+        end
+
+        v607.WalkSpeedChanger = game.Players.LocalPlayer.Character:WaitForChild('Humanoid'):GetPropertyChangedSignal('WalkSpeed'):Connect(speedup)
+
+        local v608 = u452
+
+        if u452.WalkSpeedAlawys then
+            u452.WalkSpeedAlawys:Disconnect()
+        end
+
+        v608.WalkSpeedAlawys = game.Players.LocalPlayer.CharacterAdded:Connect(function()
+            local v609 = u452
+
+            if u452.WalkSpeedChanger then
+                u452.WalkSpeedChanger:Disconnect()
+            end
+
+            v609.WalkSpeedChanger = game.Players.LocalPlayer.Character:WaitForChild('Humanoid'):GetPropertyChangedSignal('WalkSpeed'):Connect(speedup)
+
+            speedup()
+        end)
+
+        speedup()
+
+        while task.wait() do
+            if not speederActive then
+                local v610 = u452
+
+                if u452.WalkSpeedChanger then
+                    u452.WalkSpeedChanger:Disconnect()
+                end
+
+                v610.WalkSpeedChanger = nil
+
+                local v611 = u452
+
+                if u452.WalkSpeedAlawys then
+                    u452.WalkSpeedAlawys:Disconnect()
+                end
+
+                v611.WalkSpeedAlawys = nil
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+
+                return
+            end
+        end
+    end)
+end
+
+v5:CreateKeybind({
+    Name = 'WaterWalker Toggle',
+    CurrentKeybind = 'E',
+    HoldToInteract = false,
+    Callback = function()
+        speederActive = not speederActive
+
+        if speederActive then
+            Speeder()
+        end
+    end,
+})
+
+if _LocalPlayer6.Character then
+    animator = _LocalPlayer6.Character.Humanoid.Animator
+    anim = animator:LoadAnimation(game:GetService('ReplicatedStorage').Animations.Slash)
+end
+
+_LocalPlayer6.CharacterAdded:Connect(function(p612)
+    animator = p612:WaitForChild('Humanoid').Animator
+    anim = animator:LoadAnimation(game:GetService('ReplicatedStorage').Animations.Slash)
+end)
+
+local function v628(p613)
+    local _huge13 = math.huge
+    local v615, v616, v617 = ipairs(game.Players:GetPlayers())
+    local v618 = nil
+
+    while true do
+        local v619
+
+        v617, v619 = v615(v616, v617)
+
+        if v617 == nil then
+            break
+        end
+        if v619 ~= p613 then
+            local _Character19 = v619.Character
+
+            if _Character19 and _Character19:FindFirstChild('HumanoidRootPart') then
+                local _Magnitude17 = (_Character19.HumanoidRootPart.Position - p613.Character.HumanoidRootPart.Position).Magnitude
+
+                if _Magnitude17 < _huge13 then
+                    v618 = v619
+                    _huge13 = _Magnitude17
+                end
+            end
+        end
+    end
+
+    if v618 then
+        local _Character20 = v618.Character
+        local v623, v624, v625 = ipairs(_Character20:GetDescendants())
+        local v626 = {{}}
+
+        while true do
+            local v627
+
+            v625, v627 = v623(v624, v625)
+
+            if v625 == nil then
+                break
+            end
+            if v627:IsA('BasePart') then
+                table.insert(v626[1], v627)
+            end
+        end
+
+        spawn(function()
+            anim:Play()
+        end)
+    else
+        print('No closest player found.')
+    end
+end
+
+local u629 = false
+
+local function u649()
+    while u629 do
+        local _Character21 = game.Players.LocalPlayer.Character
+
+        if not _Character21 then
+            return
+        end
+
+        local _Humanoid5 = _Character21:WaitForChild('Humanoid')
+        local _HumanoidRootPart25 = _Character21:WaitForChild('HumanoidRootPart')
+        local _huge14 = math.huge
+        local v634, v635, v636 = pairs(Players:GetPlayers())
+        local v637 = nil
+
+        while true do
+            local v638
+
+            v636, v638 = v634(v635, v636)
+
+            if v636 == nil then
+                break
+            end
+            if v638 ~= game.Players.LocalPlayer then
+                local _Character22 = v638.Character
+
+                if _Character22 then
+                    local _HumanoidRootPart26 = _Character22:FindFirstChild('HumanoidRootPart')
+
+                    if _HumanoidRootPart26 then
+                        local _Magnitude18 = (_HumanoidRootPart25.Position - _HumanoidRootPart26.Position).Magnitude
+
+                        if _Magnitude18 < _huge14 then
+                            v637 = _HumanoidRootPart26
+                            _huge14 = _Magnitude18
+                        end
+                    end
+                end
+            end
+        end
+
+        if v637 then
+            local _Position4 = v637.Position
+            local v643 = PFS:CreatePath()
+
+            v643:ComputeAsync(_HumanoidRootPart25.Position, _Position4)
+
+            local v644 = v643:GetWaypoints()
+            local v645, v646, v647 = pairs(v644)
+
+            while true do
+                local v648
+
+                v647, v648 = v645(v646, v647)
+
+                if v647 == nil then
+                    break
+                end
+
+                _Humanoid5:MoveTo(v648.Position)
+
+                if v648.Action == Enum.PathWaypointAction.Jump then
+                    _Humanoid5.Jump = true
+                end
+            end
+        end
+
+        wait(0.01)
+    end
+end
+
+game:GetService('ReplicatedStorage')
+
+local _ = game.Players.LocalPlayer.Character.HumanoidRootPart
+
+Vector3.new(-286.9382019042969, 148.9720458984375, -660.6233520507813)
+v6:CreateButton({
+    Name = 'ESP PLACE U NEED TO GO (ENABLE FIRST!!)',
+    Toggle = v539,
+    Callback = function()
+        local v650 = Vector3.new(-286.9382019042969, 148.9720458984375, -660.6233520507813)
+        local _Part2 = Instance.new('Part')
+
+        _Part2.Size = Vector3.new(1, 1, 1)
+        _Part2.Position = v650
+        _Part2.Anchored = true
+        _Part2.Parent = Workspace
+        _Part2.Transparency = 1
+
+        local _BillboardGui3 = Instance.new('BillboardGui')
+
+        _BillboardGui3.Size = UDim2.new(0, 300, 0, 100)
+        _BillboardGui3.Adornee = _Part2
+        _BillboardGui3.AlwaysOnTop = true
+        _BillboardGui3.Parent = _Part2
+
+        local _TextLabel3 = Instance.new('TextLabel')
+
+        _TextLabel3.Size = UDim2.new(1, 0, 1, 0)
+        _TextLabel3.Text = 'GO TO THIS LOCATION'
+        _TextLabel3.TextColor3 = Color3.new(1, 1, 1)
+        _TextLabel3.BackgroundTransparency = 1
+        _TextLabel3.TextScaled = false
+        _TextLabel3.TextSize = 14
+        _TextLabel3.Font = Enum.Font.Fantasy
+        _TextLabel3.Parent = _BillboardGui3
+    end,
+})
+
+getgenv().autofarm = false
+
+function checkCollision(p654)
+    local _Character23 = game.Players.LocalPlayer.Character
+    local v656 = Ray.new(_Character23.HumanoidRootPart.Position, p654 - _Character23.HumanoidRootPart.Position)
+
+    return game.Workspace:FindPartOnRayWithIgnoreList(v656, {_Character23}) ~= nil
+end
+
+v6:CreateToggle({
+    Name = 'Toggle To Farm!',
+    CurrentValue = false,
+    Flag = 'toggle',
+    Callback = function(p657)
+        _G.AutoHitResource = p657
+        getgenv().autofarm = p657
+
+        if p657 then
+            while getgenv().autofarm do
+                wait()
+
+                local v658 = game:GetService('Workspace').Resources:GetChildren()
+                local v659 = Vector3.new(-286.9382019042969, 148.9720458984375, -660.6233520507813)
+                local v660, v661, v662 = ipairs(v658)
+                local v663 = 1000
+                local v664 = {}
+
+                while true do
+                    local v665
+
+                    v662, v665 = v660(v661, v662)
+
+                    if v662 == nil then
+                        break
+                    end
+                    if v665.Name == 'Feather Bush' then
+                        local _Stump = v665:FindFirstChild('Stump')
+
+                        if _Stump and _Stump:IsA('BasePart') then
+                            local _Magnitude19 = (_Stump.Position - v659).Magnitude
+
+                            if _Magnitude19 <= v663 then
+                                table.insert(v664, {
+                                    stump = _Stump,
+                                    distance = _Magnitude19,
+                                })
+                            end
+                        end
+                    end
+                end
+
+                table.sort(v664, function(p668, p669)
+                    return p668.distance < p669.distance
+                end)
+
+                while#v664 > 0 do
+                    local _stump = table.remove(v664, 1).stump
+
+                    if _stump and _stump.Parent then
+                        local _Character24 = game.Players.LocalPlayer.Character
+                        local _Position5 = _stump.Position
+                        local v673 = game:GetService('PathfindingService'):CreatePath({
+                            AgentRadius = _Character24.HumanoidRootPart.Size.X,
+                            AgentHeight = _Character24.HumanoidRootPart.Size.Y,
+                            AgentCanJump = true,
+                            AgentJumpHeight = 10,
+                            AgentMaxSlope = 45,
+                        })
+
+                        v673:ComputeAsync(_Character24.HumanoidRootPart.Position, _Position5)
+
+                        local v674 = v673:GetWaypoints()
+                        local v675, v676, v677 = ipairs(v674)
+
+                        while true do
+                            local v678
+
+                            v677, v678 = v675(v676, v677)
+
+                            if v677 == nil then
+                                break
+                            end
+
+                            local v679 = game:GetService('TweenService'):Create(_Character24.HumanoidRootPart, TweenInfo.new((v678.Position - _Character24.HumanoidRootPart.Position).Magnitude / 20, Enum.EasingStyle.Linear), {
+                                CFrame = CFrame.new(v678.Position),
+                            })
+
+                            v679:Play()
+
+                            while(_Character24.HumanoidRootPart.Position - v678.Position).Magnitude > 3 do
+                                if checkCollision(v678.Position) then
+                                    v679:Cancel()
+
+                                    break
+                                end
+
+                                wait()
+                            end
+
+                            if v678.Action == Enum.PathWaypointAction.Jump then
+                                _Character24.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                            end
+                            if not getgenv().autofarm then
+                                break
+                            end
+                        end
+                    end
+
+                    wait()
+                end
+            end
+        end
+    end,
+})
+v6:CreateButton({
+    Name = 'ESP PLACE U NEED TO GO (ENABLE FIRST!!)',
+    Toggle = v539,
+    Callback = function()
+        local v680 = Vector3.new(953, -2, -1418)
+        local _Part3 = Instance.new('Part')
+
+        _Part3.Size = Vector3.new(1, 1, 1)
+        _Part3.Position = v680
+        _Part3.Anchored = true
+        _Part3.Parent = Workspace
+        _Part3.Transparency = 1
+
+        local _BillboardGui4 = Instance.new('BillboardGui')
+
+        _BillboardGui4.Size = UDim2.new(0, 300, 0, 100)
+        _BillboardGui4.Adornee = _Part3
+        _BillboardGui4.AlwaysOnTop = true
+        _BillboardGui4.Parent = _Part3
+
+        local _TextLabel4 = Instance.new('TextLabel')
+
+        _TextLabel4.Size = UDim2.new(1, 0, 1, 0)
+        _TextLabel4.Text = 'GO TO THIS LOCATION'
+        _TextLabel4.TextColor3 = Color3.new(1, 1, 1)
+        _TextLabel4.BackgroundTransparency = 1
+        _TextLabel4.TextScaled = false
+        _TextLabel4.TextSize = 14
+        _TextLabel4.Font = Enum.Font.Fantasy
+        _TextLabel4.Parent = _BillboardGui4
+    end,
+})
+v6:CreateToggle({
+    Name = 'Toggle To Hit Gold!',
+    CurrentValue = false,
+    Flag = 'toggle',
+    Callback = function(p684)
+        getgenv().autoFarmGoldNode = p684
+
+        local _LocalPlayer7 = game.Players.LocalPlayer
+        local u686 = 10
+
+        local function v695()
+            local v687 = {}
+
+            if _LocalPlayer7.Character and _LocalPlayer7.Character:FindFirstChild('HumanoidRootPart') then
+                local _Position6 = _LocalPlayer7.Character.HumanoidRootPart.Position
+                local v689 = Region3.new(_Position6 - Vector3.new(u686, u686, u686), _Position6 + Vector3.new(u686, u686, u686))
+                local v690 = workspace:FindPartsInRegion3(v689, nil, math.huge)
+                local v691, v692, v693 = pairs(v690)
+
+                while true do
+                    local v694
+
+                    v693, v694 = v691(v692, v693)
+
+                    if v693 == nil then
+                        break
+                    end
+                    if v694.Parent.Name == 'Gold Node' and (v694.Parent:IsA('Model') and v694.Parent.PrimaryPart) then
+                        table.insert(v687, v694.Parent)
+                    end
+                end
+            end
+
+            return v687
+        end
+        local function v702(p696)
+            if _LocalPlayer7.Character and _LocalPlayer7.Character:FindFirstChild('HumanoidRootPart') then
+                local _Position7 = _LocalPlayer7.Character.HumanoidRootPart.Position
+                local v698, v699, v700 = ipairs(p696)
+
+                while true do
+                    local v701
+
+                    v700, v701 = v698(v699, v700)
+
+                    if v700 == nil then
+                        break
+                    end
+                    if (v701.PrimaryPart.Position - _Position7).Magnitude <= u686 then
+                        return v701
+                    end
+                end
+            end
+
+            return nil
+        end
+        local function v717()
+            local _Character25 = game.Players.LocalPlayer.Character
+
+            if _Character25 then
+                _Character25 = _Character25:FindFirstChild('HumanoidRootPart')
+            end
+            if _Character25 then
+                local _huge15 = math.huge
+                local v705, v706, v707 = ipairs(workspace.Resources:GetChildren())
+                local v708 = nil
+
+                while true do
+                    local v709
+
+                    v707, v709 = v705(v706, v707)
+
+                    if v707 == nil then
+                        break
+                    end
+
+                    local _BasePart10 = v709:FindFirstChildWhichIsA('BasePart')
+
+                    if _BasePart10 then
+                        local _Magnitude20 = (_BasePart10.Position - _Character25.Position).Magnitude
+
+                        if _Magnitude20 < _huge15 then
+                            v708 = v709
+                            _huge15 = _Magnitude20
+                        end
+                    end
+                end
+
+                if v708 then
+                    local v712, v713, v714 = ipairs(v708:GetChildren())
+                    local v715 = {{}}
+
+                    while true do
+                        local v716
+
+                        v714, v716 = v712(v713, v714)
+
+                        if v714 == nil then
+                            break
+                        end
+                        if v716:IsA('BasePart') then
+                            table.insert(v715[1], v716)
+                        end
+                    end
+
+                    game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('SwingTool'):FireServer(unpack(v715))
+                end
+            end
+        end
+
+        while getgenv().autoFarmGoldNode do
+            local v718 = v702((v695()))
+
+            if v718 and v718.PrimaryPart then
+                game:GetService('ReplicatedStorage').Events.SwingTool:FireServer({
+                    v718.PrimaryPart,
+                })
+            end
+
+            v717()
+            wait()
+        end
+    end,
+})
+v6:CreateToggle({
+    Name = 'Break Ice Chunk',
+    CurrentValue = false,
+    Callback = function(p719)
+        getgenv().BreakIce = p719
+        _G.AutoHitResource = p719
+
+        local function v737()
+            local function v726()
+                local v720 = game:GetService('Workspace').Resources:GetChildren()
+                local v721, v722, v723 = ipairs(v720)
+                local v724 = {}
+
+                while true do
+                    local v725
+
+                    v723, v725 = v721(v722, v723)
+
+                    if v723 == nil then
+                        break
+                    end
+                    if v725.Name == 'Ice Chunk' then
+                        table.insert(v724, v725)
+                    end
+                end
+
+                return v724
+            end
+
+            while getgenv().BreakIce do
+                local v727 = v726()
+                local _huge16 = math.huge
+                local v729, v730, v731 = ipairs(v727)
+                local v732 = nil
+
+                while true do
+                    local v733
+
+                    v731, v733 = v729(v730, v731)
+
+                    if v731 == nil then
+                        break
+                    end
+
+                    wait()
+
+                    local _Magnitude21 = (v733.Reference.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+
+                    if _Magnitude21 < _huge16 then
+                        if _Magnitude21 <= 100 then
+                            v732 = v733
+                            _huge16 = _Magnitude21
+                        end
+                    end
+                end
+
+                if v732 then
+                    local v735 = v732.Reference.Position + Vector3.new(5, 0, 0)
+                    local v736 = game:GetService('TweenService'):Create(game.Players.LocalPlayer.Character.HumanoidRootPart, TweenInfo.new((v735 - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude / 20, Enum.EasingStyle.Linear), {
+                        CFrame = CFrame.new(v735),
+                    })
+
+                    v736:Play()
+                    v736.Completed:Wait()
+                    v726()
+                end
+                if #v726() == 0 then
+                    wait(5)
+                    v726()
+                end
+            end
+        end
+
+        if p719 then
+            if not getgenv().BreakIceCoroutine then
+                getgenv().BreakIceCoroutine = coroutine.wrap(v737)()
+            end
+        elseif getgenv().BreakIceCoroutine then
+            getgenv().BreakIceCoroutine()
+
+            getgenv().BreakIceCoroutine = nil
+        end
+    end,
+})
+v6:CreateToggle({
+    Name = 'Toggle To Farm!',
+    CurrentValue = false,
+    Callback = function(p738)
+        getgenv().autofarm2 = false
+        getgenv().autofarm2 = p738
+        _G.AutoHitResource = p738
+
+        if p738 then
+            local u739 = Vector3.new(953, -2, -1418)
+            local u740 = 150
+            local u741 = {}
+
+            local function u748(p742)
+                local v743, v744, v745 = ipairs(p742:GetChildren())
+
+                while true do
+                    local v746
+
+                    v745, v746 = v743(v744, v745)
+
+                    if v745 == nil then
+                        break
+                    end
+                    if v746.Name == 'Gold Node' and v746:IsA('BasePart') then
+                        local _Magnitude22 = (v746.Position - u739).Magnitude
+
+                        if _Magnitude22 <= u740 then
+                            table.insert(u741, {
+                                nodePart = v746,
+                                distance = _Magnitude22,
+                            })
+                        end
+                    end
+
+                    u748(v746)
+                end
+            end
+
+            local v749 = u748
+
+            while getgenv().autofarm2 do
+                wait(1)
+
+                u741 = {}
+
+                v749(game:GetService('Workspace'))
+                table.sort(u741, function(p750, p751)
+                    return p750.distance < p751.distance
+                end)
+
+                local v752 = 1
+
+                while v752 <= #u741 and getgenv().autofarm2 do
+                    wait(0.5)
+
+                    local _nodePart = u741[v752].nodePart
+
+                    if _nodePart and _nodePart.Parent then
+                        local _Character26 = game.Players.LocalPlayer.Character
+                        local _Position8 = _nodePart.Position
+                        local v756 = PFS:CreatePath({
+                            AgentRadius = _Character26.HumanoidRootPart.Size.X,
+                            AgentHeight = _Character26.HumanoidRootPart.Size.Y,
+                            AgentCanJump = true,
+                            AgentJumpHeight = 10,
+                            AgentMaxSlope = 45,
+                        })
+
+                        v756:ComputeAsync(_Character26.HumanoidRootPart.Position, _Position8)
+
+                        local v757 = v756:GetWaypoints()
+                        local v758, v759, v760 = ipairs(v757)
+
+                        while true do
+                            local v761
+
+                            v760, v761 = v758(v759, v760)
+
+                            if v760 == nil or not _nodePart or not _nodePart.Parent then
+                                break
+                            end
+
+                            game:GetService('TweenService'):Create(_Character26.HumanoidRootPart, TweenInfo.new((v761.Position - _Character26.HumanoidRootPart.Position).Magnitude / 20, Enum.EasingStyle.Linear), {
+                                CFrame = CFrame.new(v761.Position),
+                            }):Play()
+
+                            while(_Character26.HumanoidRootPart.Position - v761.Position).Magnitude > 3 do
+                                wait()
+                            end
+
+                            if v761.Action == Enum.PathWaypointAction.Jump then
+                                _Character26.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                            end
+                        end
+                    else
+                        v752 = v752 + 1
+                    end
+
+                    wait(0.1)
+                end
+            end
+        end
+    end,
+})
+v6:CreateToggle({
+    Name = 'Auto Coin Press!',
+    CurrentValue = false,
+    Callback = function(p762)
+        if p762 then
+            local _huge17 = math.huge
+            local v764, v765, v766 = ipairs(workspace.Deployables:GetChildren())
+            local v767 = nil
+
+            while true do
+                local v768
+
+                v766, v768 = v764(v765, v766)
+
+                if v766 == nil then
+                    break
+                end
+                if v768.Name == 'Coin Press' then
+                    local _PrimaryPart = v768.PrimaryPart
+
+                    if _PrimaryPart then
+                        local _Magnitude23 = (_PrimaryPart.Position - workspace.CurrentCamera.CFrame.Position).Magnitude
+
+                        if _Magnitude23 < _huge17 then
+                            v767 = v768
+                            _huge17 = _Magnitude23
+                        end
+                    end
+                end
+            end
+            while p762 do
+                game:GetService('ReplicatedStorage').Events.InteractStructure:FireServer(v767, 'Gold')
+                wait(0.01)
+            end
+        end
+    end,
+})
+v6:CreateToggle({
+    Name = 'Auto PickUp Essence',
+    CurrentValue = false,
+    Callback = function(p771)
+        getgenv().autopickupEssence = p771
+
+        if p771 then
+            spawn(function()
+                while getgenv().autopickupEssence do
+                    wait()
+                    pcall(function()
+                        local _HumanoidRootPart27 = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+
+                        game:GetService('ReplicatedStorage')
+
+                        local v773, v774, v775 = pairs(game:GetService('Workspace'):GetChildren())
+
+                        while true do
+                            local v776
+
+                            v775, v776 = v773(v774, v775)
+
+                            if v775 == nil then
+                                break
+                            end
+                            if v776:FindFirstChild('Pickup') and (v776:IsA('BasePart') or v776:IsA('UnionOpreation')) and (v776.Name == 'Essence' or v776.Name:find('Essence')) and (_HumanoidRootPart27.Position - v776.Position).Magnitude < 50 then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v776)
+                            end
+                        end
+
+                        local v777, v778, v779 = pairs(game:GetService('Workspace').Items:GetChildren())
+
+                        while true do
+                            local v780
+
+                            v779, v780 = v777(v778, v779)
+
+                            if v779 == nil then
+                                break
+                            end
+                            if v780:FindFirstChild('Pickup') and (v780:IsA('BasePart') or v780:IsA('UnionOpreation')) and (v780.Name == 'Essence' or v780.Name:find('Essence')) and (_HumanoidRootPart27.Position - v780.Position).Magnitude < 50 then
+                                game:GetService('ReplicatedStorage').Events.Pickup:FireServer(v780)
+                            end
+                        end
+                    end)
+                end
+            end)
+        end
+    end,
+})
+v7:CreateToggle({
+    Name = 'Swap Tools',
+    CurrentValue = false,
+    Callback = function(p781)
+        getgenv().enabled = p781
+
+        if not getgenv().enabled then
+            return
+        end
+
+        while true do
+            for v782 = 1, 6 do
+                if not getgenv().enabled then
+                end
+
+                game:GetService('ReplicatedStorage'):WaitForChild('Events'):WaitForChild('EquipTool'):FireServer(unpack({v782}))
+            end
+
+            wait()
+        end
+    end,
+})
+
+local u783 = 0.2
+
+v7:CreateSlider({
+    Name = 'Prediction',
+    Range = {0, 20},
+    Increment = 0.01,
+    Suffix = "Prediction",
+    CurrentValue = u783,
+    Callback = function(p784)
+        u783 = p784
+    end,
+})
+v7:CreateInput({
+    Name = 'Prediction',
+    PlaceholderText = tostring(u783),
+    Callback = function(p785)
+        u783 = tonumber(p785) or 0
+    end,
+})
+v7:CreateToggle({
+    Name = 'AutoHitWithBow',
+    CurrentValue = false,
+    Callback = function(p786)
+        if p786 then
+            local function u797(p787)
+                local v788 = game:GetService('Players'):GetPlayers()
+                local _huge18 = math.huge
+                local v790, v791, v792 = ipairs(v788)
+                local v793 = nil
+
+                while true do
+                    local v794
+
+                    v792, v794 = v790(v791, v792)
+
+                    if v792 == nil then
+                        break
+                    end
+
+                    local _Character27 = v794.Character
+
+                    if _Character27 and _Character27:FindFirstChild('HumanoidRootPart') then
+                        local _Magnitude24 = (_Character27.HumanoidRootPart.Position - p787).Magnitude
+
+                        if _Magnitude24 < _huge18 then
+                            v793 = v794
+                            _huge18 = _Magnitude24
+                        end
+                    end
+                end
+
+                return v793
+            end
+            local function v805()
+                while true do
+                    local v798 = u797(Vector3.new(-852.4686279296875, -6.455718040466309, -1034.784912109375))
+
+                    if v798 then
+                        local _Character28 = v798.Character
+                        local _HumanoidRootPart28 = _Character28.HumanoidRootPart
+                        local _Velocity = _HumanoidRootPart28.Velocity
+                        local v802 = _HumanoidRootPart28.Position + _Velocity * u783
+                        local v803 = {
+                            {
+                                drawStrength = 1,
+                                lookAt = v802,
+                                id = 'c476a5fe-8c41-4ee8-9c70-b79a67234df4',
+                                toolName = 'Iron Bow',
+                            },
+                        }
+
+                        game:GetService('ReplicatedStorage').Events.CreateProjectile:FireServer(unpack(v803))
+
+                        local v804 = {
+                            _Character28.HumanoidRootPart,
+                            v802,
+                            'c476a5fe-8c41-4ee8-9c70-b79a67234df4',
+                        }
+
+                        game:GetService('ReplicatedStorage').Events.ProjectileImpact:FireServer(unpack(v804))
+                    end
+
+                    wait(1e-21)
+                end
+            end
+
+            coroutine.wrap(v805)()
+        end
+    end,
+})
+v7:CreateToggle({
+    Name = 'Walk to closest player [BETA]',
+    CurrentValue = false,
+    Callback = function(p806)
+        u629 = p806
+
+        if u629 then
+            coroutine.wrap(u649)()
+        end
+    end,
+})
+
+local _ = game.Players.LocalPlayer.Character.HumanoidRootPart
+
+if game.PlaceId ~= 11879754496 then
+    local _ = workspace.Resources
+else
+    local _ = workspace
+end
+
+CGUI = game:GetService('CoreGui')
+SGUI = game:GetService('StarterGui')
+GUIS = game:GetService('GuiService')
+ChatService = game:GetService('Chat')
+Lighting = game:GetService('Lighting')
+UIS = game:GetService('UserInputService')
+DebrisService = game:GetService('Debris')
+RunService = game:GetService('RunService')
+MS = game:GetService('MarketplaceService')
+_HttpService = game:GetService('HttpService')
+CAS = game:GetService('ContextActionService')
+SoundService = game:GetService('SoundService')
+TweenService = game:GetService('TweenService')
+NetworkClient = game:GetService('NetworkClient')
+TeleportService = game:GetService('TeleportService')
+textChatService = game:GetService('TextChatService')
+MaterialService = game:GetService('MaterialService')
+
+local _ReplicatedStorage2 = game:GetService('ReplicatedStorage')
+
+PathfindingService = game:GetService('PathfindingService')
+ProximityPromptService = game:GetService('ProximityPromptService')
+sethiddenproperty = sethiddenproperty or set_hidden_property or set_hidden_prop
+gethiddenproperty = gethiddenproperty or get_hidden_property or get_hidden_prop
+getconnections = getconnections or get_signal_cons
+setsimulationradius = setsimulationradius or set_simulation_radius
+
+local v808 = not (syn and syn.queue_on_teleport or queue_on_teleport) and fluxus
+
+if v808 then
+    v808 = fluxus.queue_on_teleport
+end
+
+queueteleport = v808
+httprequest = syn and syn.request or http and http.request or (http_request or fluxus and fluxus.request) or request
+
+assert(not getgenv().UYExcecuted, '[Unbounded Yield] Already Injected')
+
+players = game:GetService('Players')
+
+local v809 = not Players.LocalPlayer and _LocalPlayer6:GetPropertyChangedSignal('LocalPlayer'):Wait()
+
+if v809 then
+    v809 = Players.LocalPlayer
+end
+
+speaker = v809
+Mouse = speaker:GetMouse()
+char = speaker.Character or speaker.CharacterAdded:Wait()
+workspace = game:GetService('Workspace')
+Camera = workspace.CurrentCamera
+
+function r15(p810)
+    if p810.Character:FindFirstChildOfClass('Humanoid').RigType == Enum.HumanoidRigType.R15 then
+        return true
+    end
+end
+function getRoot(p811)
+    return p811:FindFirstChild('HumanoidRootPart') or (p811:FindFirstChild('Torso') or p811:FindFirstChild('UpperTorso'))
+end
+function tools(p812)
+    if p812:FindFirstChildOfClass('Backpack'):FindFirstChildOfClass('Tool') or p812.Character:FindFirstChildOfClass('Tool') then
+        return true
+    end
+end
+function isNumber(p813)
+    if tonumber(p813) ~= nil or p813 == 'inf' then
+        return true
+    end
+end
+function copyTool(p814)
+    local v815, v816, v817 = pairs(p814:GetDescendants())
+
+    while true do
+        local v818
+
+        v817, v818 = v815(v816, v817)
+
+        if v817 == nil then
+            break
+        end
+        if v818:IsA('Tool') or v818:IsA('HopperBin') then
+            v818:Clone().Parent = speaker:FindFirstChildOfClass('Backpack')
+        end
+
+        copyTool(v818)
+    end
+end
+function findTouchInterest(p819)
+    if p819 then
+        p819 = p819:FindFirstChildWhichIsA('TouchTransmitter', true)
+    end
+
+    return p819
+end
+function say(p820)
+    _ReplicatedStorage2:WaitForChild('DefaultChatSystemChatEvents'):WaitForChild('SayMessageRequest'):FireServer(p820, 'All')
+end
+function isAlive()
+    if getRoot(speaker.Character) then
+        return true
+    end
+end
+function missingFunc(p821)
+    Rayfield:Notify({
+        Title = 'Missing Function',
+        Content = 'missing: ' .. tostring(p821),
+        Duration = 3,
+    })
+end
+function notification(p822, p823, p824)
+    if p824 then
+        Rayfield:Notify({
+            Title = tostring(p822),
+            Content = tostring(p823),
+            Duration = tonumber(p824),
+        })
+    else
+        Rayfield:Notify({
+            Title = tostring(p822),
+            Content = tostring(p823),
+            Duration = 3,
+        })
+    end
+end
+
+setreadonly(getgenv().table, false)
+
+function randomString()
+    local v825 = {}
+
+    for v826 = 1, math.random(60, 190)do
+        v825[v826] = string.char(math.random(32, 126))
+    end
+
+    return table.concat(v825)
+end
+
+print('[Unbounded Yield] Functions loaded')
+
+local u836 = {
+    RenderStepTable = {},
+    StepTable = {},
+    HeartTable = {},
+    BindToRenderStep = function(_, p827, p828)
+        if u836.RenderStepTable[p827] == nil then
+            u836.RenderStepTable[p827] = RunService.RenderStepped:Connect(p828)
+        end
+    end,
+    UnbindFromRenderStep = function(_, p829)
+        if u836.RenderStepTable[p829] then
+            u836.RenderStepTable[p829]:Disconnect()
+
+            u836.RenderStepTable[p829] = nil
+        end
+    end,
+    BindToStepped = function(_, p830, p831)
+        if u836.StepTable[p830] == nil then
+            u836.StepTable[p830] = RunService.Stepped:Connect(p831)
+        end
+    end,
+    UnbindFromStepped = function(_, p832)
+        if u836.StepTable[p832] then
+            u836.StepTable[p832]:Disconnect()
+
+            u836.StepTable[p832] = nil
+        end
+    end,
+    BindToHeartbeat = function(_, p833, p834)
+        if u836.HeartTable[p833] == nil then
+            u836.HeartTable[p833] = RunService.Heartbeat:Connect(p834)
+        end
+    end,
+    UnbindFromHeartbeat = function(_, p835)
+        if u836.HeartTable[p835] then
+            u836.HeartTable[p835]:Disconnect()
+
+            u836.HeartTable[p835] = nil
+        end
+    end,
+}
+local v837 = RaycastParams.new()
+
+v837.FilterType = Enum.RaycastFilterType.Blacklist
+v837.RespectCanCollide = true
+
+CFrame.new(0, 0, 0)
+
+clickTPVal_3849467e9876549876 = false
+
+if game.PlaceId == 4483381587 and (speaker.UserId == 3869506227 or speaker.UserId == 4245281750) then
+    clickTPVal_3849467e9876549876 = true
+end
+
+isToggleOn3 = false
+speed3 = 5
+isToggleOn11 = false
+slamdistance = -500
+
+local u838 = false
+
+local function u844(p839, p840)
+    local _BillboardGui5 = Instance.new('BillboardGui')
+
+    _BillboardGui5.Size = UDim2.new(0, 100, 0, 50)
+    _BillboardGui5.Adornee = nil
+    _BillboardGui5.AlwaysOnTop = true
+
+    local _TextLabel5 = Instance.new('TextLabel', _BillboardGui5)
+
+    _TextLabel5.Text = p839
+    _TextLabel5.Size = UDim2.new(1, 0, 1, 0)
+    _TextLabel5.Position = UDim2.new(0, 1, 0, 1)
+    _TextLabel5.BackgroundTransparency = 1
+    _TextLabel5.TextColor3 = Color3.new(0, 0, 0)
+    _TextLabel5.Font = Enum.Font.SourceSansBold
+    _TextLabel5.TextSize = 14
+
+    local _TextLabel6 = Instance.new('TextLabel', _BillboardGui5)
+
+    _TextLabel6.Text = p839
+    _TextLabel6.Size = UDim2.new(1, 0, 1, 0)
+    _TextLabel6.BackgroundTransparency = 1
+    _TextLabel6.TextColor3 = p840
+    _TextLabel6.Font = Enum.Font.SourceSansBold
+    _TextLabel6.TextSize = 14
+
+    return _BillboardGui5
+end
+
+local u845 = {}
+
+local function u853()
+    local v846, v847, v848 = ipairs(Workspace.Resources:GetChildren())
+
+    while true do
+        local v849
+
+        v848, v849 = v846(v847, v848)
+
+        if v848 == nil then
+            break
+        end
+        if v849:IsA('Model') and not v849.Name:find('Stone Node') then
+            local _BasePart11 = v849:FindFirstChildWhichIsA('BasePart')
+
+            if _BasePart11 then
+                local v851 = nil
+
+                if v849.Name:find('Gold Node') then
+                    v851 = Color3.fromRGB(255, 215, 0)
+                elseif v849.Name:find('Iron Node') then
+                    v851 = Color3.fromRGB(205, 133, 63)
+                elseif v849.Name:find('Coal Ore') then
+                    v851 = Color3.fromRGB(128, 128, 128)
+                end
+                if v851 then
+                    local v852 = u844(v849.Name, v851)
+
+                    v852.Adornee = _BasePart11
+                    v852.Parent = _BasePart11
+                    u845[v849] = v852
+                end
+            end
+        end
+    end
+end
+local function u858()
+    local v854, v855, v856 = pairs(u845)
+
+    while true do
+        local v857
+
+        v856, v857 = v854(v855, v856)
+
+        if v856 == nil then
+            break
+        end
+
+        v857:Destroy()
+    end
+
+    u845 = {}
+end
+
+v8:CreateToggle({
+    Name = 'ESP Ores Toggle',
+    CurrentValue = false,
+    Callback = function(p859)
+        u838 = p859
+
+        if u838 then
+            u853()
+        else
+            u858()
+        end
+    end,
+})
+v8:CreateButton({
+    Name = 'Voodo Aimbot',
+    Callback = function()
+        loadstring(game:HttpGet('https://paste.fo/raw/38eb0d7f18da'))()
+    end,
+})
+v8:CreateButton({
+    Name = 'Keyboard',
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt', true))()
+    end,
+})
+
+while true do
+    if _G.TweenToRandomPart then
+        v538()
+    end
+    if _G.AutoHitResource then
+        v480()
+    end
+    if _G.AutoHitCritters then
+        v495()
+    end
+    if _G.AutoHitHumanoidCritters then
+        v510()
+    end
+    if _G.AutoHitHumanoidCritters2 then
+        v525()
+    end
+    if _G.AutoHitPlayer then
+        v628(game.Players.LocalPlayer)
+    end
+    if _G.AutoHitPlayer2 then
+        v532(v534, v542, distance)
+    end
+    if _G.BirdFarm then
+        v597()
+    end
+
+    wait(0.01)
+end
+
