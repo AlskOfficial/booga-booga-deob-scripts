@@ -1,5 +1,5 @@
 --basically nilhub free wouldnt load unless i swapped ui (because texchy used custom ui but he deleted repo) SO i swapped ui by using ai
---also didnt bother testing anything
+--also didnt bother testing anything and its old nilhub free not new
 CGUI = game:GetService('CoreGui')
 SGUI = game:GetService('StarterGui')
 GUIS = game:GetService('GuiService')
